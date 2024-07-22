@@ -8,7 +8,8 @@ import androidx.lifecycle.ViewModel
 import java.io.File
 
 data class StorageUiState(
-    val currentPath: String = "",
+    // Defaults to root folder path
+    val currentPath: String = Environment.getExternalStorageDirectory().toString(),
     val fileNames: List<File> = listOf()
 )
 
@@ -17,17 +18,17 @@ class StorageViewModel : ViewModel() {
         private set
 
     init {
-        getFilesList()
+        moveToDirectory(storageUiState.currentPath)
     }
 
-    fun getFilesList() {
-        val path = Environment.getExternalStorageDirectory().toString() +
-                storageUiState.currentPath
+    fun moveToDirectory(path: String) {
         val directory = File(path)
         val files = directory.listFiles()
         if (files != null) {
+            // Returns false if directory is empty
             storageUiState = storageUiState.copy(
-                fileNames = files.map { it }
+                fileNames = files.map { it },
+                currentPath = path
             )
         }
     }
