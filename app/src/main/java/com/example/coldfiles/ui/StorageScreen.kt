@@ -1,6 +1,8 @@
 package com.example.coldfiles.ui
 
+import android.app.Activity
 import android.content.Intent
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +40,12 @@ fun StorageScreen(
     val uiState = viewModel.storageUiState
     val context = LocalContext.current
 
+    BackHandler {
+        viewModel.moveToPreviousDirectory()
+        if (uiState.pathDeque.isEmpty())
+            (context as? Activity)?.finish()
+    }
+
     Scaffold(
         topBar = { StorageTopBar() }
     ) { innerPadding ->
@@ -47,7 +55,7 @@ fun StorageScreen(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             modifier = modifier.padding(innerPadding)
         ) {
-            items(uiState.fileNames) { file ->
+            items(uiState.files) { file ->
                 FileCard(
                     fileName = file.name,
                     modifier = Modifier.clickable {
@@ -60,7 +68,7 @@ fun StorageScreen(
                                 context.startActivity(intent)
                             }
 
-                            false -> viewModel.moveToDirectory(file.path)
+                            false -> viewModel.moveToDirectory(file.name)
                         }
                     }
                 )
@@ -87,6 +95,11 @@ fun FileCard(
             Text(text = fileName)
         }
     }
+}
+
+@Composable
+fun StorageScrollableBar() {
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
