@@ -1,6 +1,7 @@
 package com.example.coldfiles.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
@@ -10,11 +11,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -31,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coldfiles.ui.theme.ColdFilesTheme
+import java.io.File
 
 @Composable
 fun StorageScreen(
@@ -49,30 +54,54 @@ fun StorageScreen(
     Scaffold(
         topBar = { StorageTopBar() }
     ) { innerPadding ->
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(1),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        Column(
             modifier = modifier.padding(innerPadding)
         ) {
-            items(uiState.files) { file ->
-                FileCard(
-                    fileName = file.name,
-                    modifier = Modifier.clickable {
-                        // If file is clicked, open it
-                        // Else move to selected directory
-                        when (file.isFile) {
-                            true -> {
-                                val intent = Intent(Intent.ACTION_VIEW)
-                                intent.data = file.toUri()
-                                context.startActivity(intent)
-                            }
+            StorageScrollableBar(
+                directoriesNames = viewModel.storageUiState.pathDeque,
+                modifier = Modifier.padding(16.dp)
+            )
+            StorageScreenContent(
+                files = uiState.files,
+                onFileClick = viewModel::moveToDirectory,
+                context = context
+            )
+        }
+    }
+}
 
-                            false -> viewModel.moveToDirectory(file.name)
+@Composable
+fun StorageScreenContent(
+    files: List<File>,
+    onFileClick: (String) -> Unit,
+    context: Context,
+    modifier: Modifier = Modifier,
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(1),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = modifier
+    ) {
+        items(files) { file ->
+            FileCard(
+                fileName = file.name,
+                modifier = Modifier.clickable {
+                    // If file is clicked, open it
+                    // Else move to selected directory
+                    when (file.isFile) {
+                        true -> {
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.data = file.toUri()
+                            context.startActivity(intent)
+                        }
+
+                        false -> {
+                            onFileClick(file.name)
                         }
                     }
-                )
-            }
+                }
+            )
         }
     }
 }
@@ -98,8 +127,19 @@ fun FileCard(
 }
 
 @Composable
-fun StorageScrollableBar() {
-
+fun StorageScrollableBar(
+    directoriesNames: List<String>,
+    modifier: Modifier = Modifier
+) {
+    LazyRow(modifier = modifier) {
+        items(directoriesNames) { directory ->
+            Text(text = directory)
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = null
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
