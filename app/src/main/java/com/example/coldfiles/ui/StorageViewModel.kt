@@ -1,12 +1,12 @@
 package com.example.coldfiles.ui
 
 import android.os.Environment
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import java.io.File
+import java.security.InvalidParameterException
 
 val BASE_PATH = Environment.getExternalStorageDirectory().toString()
 
@@ -20,6 +20,7 @@ class StorageViewModel : ViewModel() {
     var storageUiState by mutableStateOf(StorageUiState())
         private set
 
+    /** Combines root directory path with directories in deque **/
     private val fullPath get() = BASE_PATH + storageUiState.pathDeque.joinToString(
             separator = '/'.toString()
         )
@@ -28,12 +29,11 @@ class StorageViewModel : ViewModel() {
         moveToDirectory("")
     }
 
+    /** Moves to specified directory, if none is provided moves to current directory **/
     fun moveToDirectory(directoryName: String? = null) {
         if (directoryName != null) {
             storageUiState.pathDeque.add(directoryName)
         }
-
-        Log.d("FilesDebug", fullPath)
 
         val directory = File(fullPath)
         val files = directory.listFiles()
@@ -45,8 +45,24 @@ class StorageViewModel : ViewModel() {
         }
     }
 
+    /** Removes last directory from deque and moves to last remained **/
     fun moveToPreviousDirectory() {
         storageUiState.pathDeque.removeLastOrNull()
+        moveToDirectory()
+    }
+
+    /** Moves to one of the directories from deque
+     * if none **/
+    fun moveToPreviousSpecifiedDirectory(directoryName: String) {
+        // If it's not root and there's no such directory, throw Exception
+        if (!storageUiState.pathDeque.contains(directoryName))
+            throw InvalidParameterException("This directory doesn't exist")
+
+        // Removes all directories until required is reached
+        while(storageUiState.pathDeque.last() != directoryName) {
+            storageUiState.pathDeque.removeLast()
+        }
+
         moveToDirectory()
     }
 }

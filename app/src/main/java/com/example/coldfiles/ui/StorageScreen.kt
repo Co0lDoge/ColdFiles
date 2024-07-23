@@ -59,6 +59,7 @@ fun StorageScreen(
         ) {
             StorageScrollableBar(
                 directoriesNames = viewModel.storageUiState.pathDeque,
+                onBarItemClick = viewModel::moveToPreviousSpecifiedDirectory,
                 modifier = Modifier.padding(16.dp)
             )
             StorageScreenContent(
@@ -129,11 +130,16 @@ fun FileCard(
 @Composable
 fun StorageScrollableBar(
     directoriesNames: List<String>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBarItemClick: (String) -> Unit
 ) {
     LazyRow(modifier = modifier) {
         items(directoriesNames) { directory ->
-            Text(text = directory)
+            Text(
+                // Display "Home for root folder and directory names for others
+                text = if (directory == "") "Home" else directory,
+                modifier = Modifier.clickable { onBarItemClick(directory) }
+            )
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = null
