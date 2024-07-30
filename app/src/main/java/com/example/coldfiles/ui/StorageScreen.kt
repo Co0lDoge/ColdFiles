@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -87,6 +88,7 @@ fun StorageScreenContent(
         items(files) { file ->
             FileCard(
                 fileName = file.name,
+                isFile = file.isFile,
                 modifier = Modifier.clickable {
                     // If file is clicked, open it
                     // Else move to selected directory
@@ -110,13 +112,14 @@ fun StorageScreenContent(
 @Composable
 fun FileCard(
     fileName: String,
+    isFile: Boolean,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier.padding(16.dp)
     ) {
         Icon(
-            imageVector = Icons.Default.Email,
+            imageVector = if (isFile) Icons.Default.Email else Icons.Default.Lock,
             contentDescription = fileName,
             modifier = modifier.size(32.dp)
         )
@@ -168,7 +171,7 @@ fun StorageTopBar() {
 @Preview(showBackground = true)
 fun FileCardPreview() {
     ColdFilesTheme {
-        FileCard(fileName = "File Name")
+        FileCard(fileName = "File Name", isFile = false)
     }
 }
 
