@@ -33,10 +33,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coldfiles.ui.theme.ColdFilesTheme
 import java.io.File
+
 
 @Composable
 fun StorageScreen(
@@ -95,7 +96,12 @@ fun StorageScreenContent(
                     when (file.isFile) {
                         true -> {
                             val intent = Intent(Intent.ACTION_VIEW)
-                            intent.data = file.toUri()
+                            intent.data = FileProvider.getUriForFile(
+                                context,
+                                context.applicationContext.packageName + ".provider",
+                                file
+                            )
+                            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
                             context.startActivity(intent)
                         }
 
@@ -119,7 +125,7 @@ fun FileCard(
         modifier = modifier.padding(16.dp)
     ) {
         Icon(
-            imageVector = if (isFile) Icons.Default.Email else Icons.Default.Lock,
+            imageVector = if (isFile) Icons.Default.Lock else Icons.Default.Email,
             contentDescription = fileName,
             modifier = modifier.size(32.dp)
         )
@@ -171,7 +177,10 @@ fun StorageTopBar() {
 @Preview(showBackground = true)
 fun FileCardPreview() {
     ColdFilesTheme {
-        FileCard(fileName = "File Name", isFile = false)
+        FileCard(
+            fileName = "File Name",
+            isFile = false
+        )
     }
 }
 
