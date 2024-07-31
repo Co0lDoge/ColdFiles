@@ -16,9 +16,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -30,9 +28,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coldfiles.R
 import com.example.coldfiles.ui.theme.ColdFilesTheme
 import java.io.File
 
@@ -116,9 +116,10 @@ fun FileCard(
         modifier = modifier.padding(16.dp)
     ) {
         Icon(
-            imageVector = if (isFile) Icons.Default.Lock else Icons.Default.Email,
+            painter = if (isFile) painterResource(id = R.drawable.file)
+                      else painterResource(id = R.drawable.folder),
             contentDescription = fileName,
-            modifier = modifier.size(32.dp)
+            modifier = Modifier.size(32.dp)
         )
         Spacer(modifier = Modifier.padding(horizontal = 16.dp))
         Column {
