@@ -1,12 +1,13 @@
 package com.example.coldfiles.ui.storage
 
 import android.app.Activity
-import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,6 +48,7 @@ import java.text.DateFormat
 
 
 @Composable
+/** Top-level composable that holds reference to uiState **/
 fun StorageScreen(
     modifier: Modifier = Modifier,
     viewModel: StorageViewModel = viewModel()
@@ -73,18 +75,30 @@ fun StorageScreen(
             )
             StorageScreenCard(
                 files = uiState.files,
-                onDirectoryClick = viewModel::moveToDirectory,
-                context = context
+                onItemClick = { item ->
+                    when (item.isFile) {
+                        // If item is file, open it
+                        true -> {
+                            openFile(item, context)
+                        }
+                        // Otherwise, if it's a directory, go to that directory
+                        false -> {
+                            viewModel.moveToDirectory(item.name)
+                        }
+                    }
+                },
+                onLongItemClick = {/*TODO*/},
             )
         }
     }
 }
 
 @Composable
+/** Card containing grid of StorageItems **/
 fun StorageScreenCard(
     files: List<File>,
-    onDirectoryClick: (String) -> Unit,
-    context: Context,
+    onItemClick: (File) -> Unit,
+    onLongItemClick: (File) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -107,26 +121,30 @@ fun StorageScreenCard(
                 )
         ) {
             if (files.isNotEmpty()) {
-                FileListGrid(
+                StorageItemGrid(
                     files = files,
-                    context = context,
-                    onDirectoryClick = onDirectoryClick,
+                    onItemClick = onItemClick,
+                    onLongItemClick = onLongItemClick
                     )
             } else {
                 Text(
                     text = "Directory is empty",
-                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FileListGrid(
+/** Grid of StorageItems **/
+fun StorageItemGrid(
     files: List<File>,
-    onDirectoryClick: (String) -> Unit,
-    context: Context,
+    onItemClick: (File) -> Unit,
+    onLongItemClick: (File) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -136,28 +154,21 @@ fun FileListGrid(
         modifier = modifier
     ) {
         items(files) { file ->
-            FileItem(
+            StorageItem(
                 file = file,
-                modifier = Modifier.clickable {
-                    // If file is clicked, open it
-                    // Else move to selected directory
-                    when (file.isFile) {
-                        true -> {
-                            openFile(file, context)
-                        }
-
-                        false -> {
-                            onDirectoryClick(file.name)
-                        }
-                    }
-                }
+                modifier = Modifier.combinedClickable(
+                    onClick = { onItemClick(file) },
+                    onLongClick = { onLongItemClick(file) },
+                )
             )
         }
     }
 }
 
 @Composable
-fun FileItem(
+/** UI element that contains file/directory information
+ * and provides ways to interact with it **/
+fun StorageItem(
     file: File,
     modifier: Modifier = Modifier
 ) {
@@ -179,6 +190,7 @@ fun FileItem(
 }
 
 @Composable
+/** Bar containing list of previous destinations **/
 fun StorageScrollableBar(
     directoriesNames: List<String>,
     modifier: Modifier = Modifier,
@@ -201,6 +213,7 @@ fun StorageScrollableBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+/** Top bar with**/
 fun StorageTopBar() {
     CenterAlignedTopAppBar(
         title = { },
@@ -214,22 +227,3 @@ fun StorageTopBar() {
         }
     )
 }
-
-//@Composable
-//@Preview(showBackground = true)
-//fun FileCardPreview() {
-//    ColdFilesTheme {
-//        FileCard(
-//            fileName = "File Name",
-//            isFile = false
-//        )
-//    }
-//}
-
-//@Composable
-//@Preview(showBackground = true)
-//fun StorageScreenPreview() {
-//    ColdFilesTheme {
-//        StorageScreen()
-//    }
-//}
