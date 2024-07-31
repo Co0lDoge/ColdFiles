@@ -19,8 +19,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -78,30 +80,32 @@ fun StorageScreenContent(
     context: Context,
     modifier: Modifier = Modifier,
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(1),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = modifier
-    ) {
-        items(files) { file ->
-            FileCard(
-                fileName = file.name,
-                isFile = file.isFile,
-                modifier = Modifier.clickable {
-                    // If file is clicked, open it
-                    // Else move to selected directory
-                    when (file.isFile) {
-                        true -> {
-                            openFile(file, context)
-                        }
+    Card {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(1),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = modifier.padding(16.dp)
+        ) {
+            items(files) { file ->
+                FileCard(
+                    fileName = file.name,
+                    isFile = file.isFile,
+                    modifier = Modifier.clickable {
+                        // If file is clicked, open it
+                        // Else move to selected directory
+                        when (file.isFile) {
+                            true -> {
+                                openFile(file, context)
+                            }
 
-                        false -> {
-                            onDirectoryClick(file.name)
+                            false -> {
+                                onDirectoryClick(file.name)
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
@@ -112,9 +116,7 @@ fun FileCard(
     isFile: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier.padding(16.dp)
-    ) {
+    Row(modifier = modifier) {
         Icon(
             painter = if (isFile) painterResource(id = R.drawable.file)
                       else painterResource(id = R.drawable.folder),
@@ -124,6 +126,9 @@ fun FileCard(
         Spacer(modifier = Modifier.padding(horizontal = 16.dp))
         Column {
             Text(text = fileName)
+            Text("additional info")
+            Spacer(modifier = Modifier)
+            HorizontalDivider()
         }
     }
 }
