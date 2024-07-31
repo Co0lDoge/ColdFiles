@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -30,7 +31,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -68,7 +71,7 @@ fun StorageScreen(
                 onBarItemClick = viewModel::moveToPreviousSpecifiedDirectory,
                 modifier = Modifier.padding(16.dp)
             )
-            StorageScreenContent(
+            StorageScreenCard(
                 files = uiState.files,
                 onDirectoryClick = viewModel::moveToDirectory,
                 context = context
@@ -78,7 +81,7 @@ fun StorageScreen(
 }
 
 @Composable
-fun StorageScreenContent(
+fun StorageScreenCard(
     files: List<File>,
     onDirectoryClick: (String) -> Unit,
     context: Context,
@@ -92,10 +95,8 @@ fun StorageScreenContent(
         modifier = modifier
             .padding(bottom = 8.dp)
     ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(1),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        Surface(
+            color = MaterialTheme.colorScheme.surfaceVariant,
             modifier = Modifier
                 .padding(16.dp)
                 .animateContentSize(
@@ -105,24 +106,52 @@ fun StorageScreenContent(
                     )
                 )
         ) {
-            items(files) { file ->
-                FileItem(
-                    file = file,
-                    modifier = Modifier.clickable {
-                        // If file is clicked, open it
-                        // Else move to selected directory
-                        when (file.isFile) {
-                            true -> {
-                                openFile(file, context)
-                            }
-
-                            false -> {
-                                onDirectoryClick(file.name)
-                            }
-                        }
-                    }
+            if (files.isNotEmpty()) {
+                FileListGrid(
+                    files = files,
+                    context = context,
+                    onDirectoryClick = onDirectoryClick,
+                    )
+            } else {
+                Text(
+                    text = "Directory is empty",
+                    modifier = Modifier.fillMaxWidth().padding(16.dp)
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun FileListGrid(
+    files: List<File>,
+    onDirectoryClick: (String) -> Unit,
+    context: Context,
+    modifier: Modifier = Modifier,
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(1),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier
+    ) {
+        items(files) { file ->
+            FileItem(
+                file = file,
+                modifier = Modifier.clickable {
+                    // If file is clicked, open it
+                    // Else move to selected directory
+                    when (file.isFile) {
+                        true -> {
+                            openFile(file, context)
+                        }
+
+                        false -> {
+                            onDirectoryClick(file.name)
+                        }
+                    }
+                }
+            )
         }
     }
 }

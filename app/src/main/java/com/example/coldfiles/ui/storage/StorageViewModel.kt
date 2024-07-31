@@ -38,10 +38,13 @@ class StorageViewModel : ViewModel() {
 
         val directory = File(fullPath)
         val files = directory.listFiles()
-        if (files != null) {
-            // Returns false if directory is empty
-            storageUiState = storageUiState.copy(
+        storageUiState = if (files != null) {
+            storageUiState.copy(
                 files = files.map { it },
+            )
+        } else {
+            storageUiState.copy(
+                files = listOf()
             )
         }
     }
