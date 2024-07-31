@@ -39,8 +39,13 @@ class StorageViewModel : ViewModel() {
         val directory = File(fullPath)
         val files = directory.listFiles()
         storageUiState = if (files != null) {
+            // Currently folders and files are sorted by name with folders on top
+            // TODO: Add ability to select sort type and order.
             storageUiState.copy(
-                files = files.map { it },
+                files = files
+                    .map { it }
+                    .sortedWith(compareBy<File> { it.isFile }
+                        .thenBy { it.name })
             )
         } else {
             storageUiState.copy(
