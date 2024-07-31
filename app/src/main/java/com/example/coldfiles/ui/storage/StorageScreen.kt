@@ -8,7 +8,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -112,7 +111,6 @@ fun StorageScreenCard(
         Surface(
             color = MaterialTheme.colorScheme.surfaceVariant,
             modifier = Modifier
-                .padding(16.dp)
                 .animateContentSize(
                     animationSpec = spring(
                         dampingRatio = Spring.DampingRatioNoBouncy,
@@ -149,8 +147,6 @@ fun StorageItemGrid(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
     ) {
         items(files) { file ->
@@ -172,7 +168,13 @@ fun StorageItem(
     file: File,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier
+        .padding(
+            start = 16.dp,
+            top = 16.dp,
+            end = 16.dp
+        )
+    ) {
         Icon(
             painter = if (file.isFile) painterResource(id = R.drawable.file)
             else painterResource(id = R.drawable.folder),
