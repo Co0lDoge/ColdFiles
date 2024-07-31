@@ -36,6 +36,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -168,24 +169,28 @@ fun StorageItem(
     file: File,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier
-        .padding(
-            start = 16.dp,
-            top = 16.dp,
-            end = 16.dp
-        )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .padding(
+                start = 16.dp,
+                top = 8.dp,
+                end = 16.dp
+            )
     ) {
         Icon(
             painter = if (file.isFile) painterResource(id = R.drawable.file)
             else painterResource(id = R.drawable.folder),
             contentDescription = file.name,
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier
+                .padding(bottom = 12.dp)
+                .size(32.dp)
         )
         Spacer(modifier = Modifier.padding(horizontal = 16.dp))
         Column {
             Text(text = file.name)
             Text(text = DateFormat.getDateInstance().format(file.lastModified()))
-            Spacer(modifier = Modifier)
+            Spacer(modifier = Modifier.padding(bottom = 8.dp))
             HorizontalDivider()
         }
     }
