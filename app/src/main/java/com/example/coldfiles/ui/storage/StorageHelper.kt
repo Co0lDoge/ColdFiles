@@ -1,7 +1,9 @@
 package com.example.coldfiles.ui.storage
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.core.content.FileProvider
 import java.io.File
 
@@ -15,5 +17,10 @@ fun openFile(file: File, context: Context) {
         file
     )
     intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-    context.startActivity(intent)
+    try {
+        context.startActivity(intent)
+    }
+    catch (e: ActivityNotFoundException) {
+        Toast.makeText(context, "Cannot find application for this file", Toast.LENGTH_SHORT).show()
+    }
 }
