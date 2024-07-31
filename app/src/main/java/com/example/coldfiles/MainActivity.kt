@@ -14,7 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
-import com.example.coldfiles.ui.StorageScreen
+import com.example.coldfiles.ui.storage.StorageScreen
 import com.example.coldfiles.ui.theme.ColdFilesTheme
 
 class MainActivity : ComponentActivity() {

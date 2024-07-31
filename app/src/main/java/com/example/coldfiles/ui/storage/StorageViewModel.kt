@@ -1,4 +1,4 @@
-package com.example.coldfiles.ui
+package com.example.coldfiles.ui.storage
 
 import android.os.Environment
 import androidx.compose.runtime.getValue
@@ -21,7 +21,8 @@ class StorageViewModel : ViewModel() {
         private set
 
     /** Combines root directory path with directories in deque **/
-    private val fullPath get() = BASE_PATH + storageUiState.pathDeque.joinToString(
+    private val fullPath
+        get() = BASE_PATH + storageUiState.pathDeque.joinToString(
             separator = '/'.toString()
         )
 
@@ -59,7 +60,7 @@ class StorageViewModel : ViewModel() {
             throw InvalidParameterException("This directory doesn't exist")
 
         // Removes all directories until required is reached
-        while(storageUiState.pathDeque.last() != directoryName) {
+        while (storageUiState.pathDeque.last() != directoryName) {
             storageUiState.pathDeque.removeLast()
         }
 

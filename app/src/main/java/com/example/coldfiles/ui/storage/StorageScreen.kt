@@ -1,8 +1,7 @@
-package com.example.coldfiles.ui
+package com.example.coldfiles.ui.storage
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coldfiles.ui.theme.ColdFilesTheme
 import java.io.File
@@ -66,7 +64,7 @@ fun StorageScreen(
             )
             StorageScreenContent(
                 files = uiState.files,
-                onFileClick = viewModel::moveToDirectory,
+                onDirectoryClick = viewModel::moveToDirectory,
                 context = context
             )
         }
@@ -76,7 +74,7 @@ fun StorageScreen(
 @Composable
 fun StorageScreenContent(
     files: List<File>,
-    onFileClick: (String) -> Unit,
+    onDirectoryClick: (String) -> Unit,
     context: Context,
     modifier: Modifier = Modifier,
 ) {
@@ -95,18 +93,11 @@ fun StorageScreenContent(
                     // Else move to selected directory
                     when (file.isFile) {
                         true -> {
-                            val intent = Intent(Intent.ACTION_VIEW)
-                            intent.data = FileProvider.getUriForFile(
-                                context,
-                                context.applicationContext.packageName + ".provider",
-                                file
-                            )
-                            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-                            context.startActivity(intent)
+                            openFile(file, context)
                         }
 
                         false -> {
-                            onFileClick(file.name)
+                            onDirectoryClick(file.name)
                         }
                     }
                 }
