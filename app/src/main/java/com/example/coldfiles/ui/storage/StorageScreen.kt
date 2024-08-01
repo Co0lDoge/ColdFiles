@@ -50,8 +50,8 @@ import java.io.File
 import java.text.DateFormat
 
 
+/** Top-level composable that holds reference to uiState **/
 @Composable
-        /** Top-level composable that holds reference to uiState **/
 fun StorageScreen(
     modifier: Modifier = Modifier,
     viewModel: StorageViewModel = viewModel()
@@ -99,6 +99,7 @@ fun StorageScreen(
     }
 }
 
+/** Context menu that slides down from the bottom of the screen**/
 @Composable
 fun StorageContextMenu(modifier: Modifier = Modifier) {
     Surface(
@@ -142,8 +143,8 @@ fun StorageContextMenu(modifier: Modifier = Modifier) {
     }
 }
 
+/** Card containing grid of StorageItems **/
 @Composable
-        /** Card containing grid of StorageItems **/
 fun StorageScreenCard(
     files: List<File>,
     onItemClick: (File) -> Unit,
@@ -186,9 +187,9 @@ fun StorageScreenCard(
     }
 }
 
+/** Grid of StorageItems **/
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-        /** Grid of StorageItems **/
 fun StorageItemGrid(
     files: List<File>,
     onItemClick: (File) -> Unit,
@@ -211,9 +212,9 @@ fun StorageItemGrid(
     }
 }
 
+/** UI element that contains file/directory information
+ * and provides ways to interact with it **/
 @Composable
-        /** UI element that contains file/directory information
-         * and provides ways to interact with it **/
 fun StorageItem(
     file: File,
     modifier: Modifier = Modifier
@@ -245,8 +246,8 @@ fun StorageItem(
     }
 }
 
+/** Bar containing list of previous destinations **/
 @Composable
-        /** Bar containing list of previous destinations **/
 fun StorageScrollableBar(
     directoriesNames: List<String>,
     modifier: Modifier = Modifier,
@@ -267,9 +268,9 @@ fun StorageScrollableBar(
     }
 }
 
+/** Top bar with**/
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-        /** Top bar with**/
 fun StorageTopBar() {
     CenterAlignedTopAppBar(
         title = { },
