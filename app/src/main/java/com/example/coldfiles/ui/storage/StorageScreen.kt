@@ -9,11 +9,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -66,79 +65,33 @@ fun StorageScreen(
     }
 
     Scaffold(
-        topBar = { StorageTopBar() }
+        topBar = { StorageTopBar() },
+        bottomBar = { StorageBottomContextBar() }
     ) { innerPadding ->
-        Box(modifier = modifier
-            .padding(innerPadding)
-            .fillMaxHeight()) {
-            Column {
-                StorageScrollableBar(
-                    directoriesNames = viewModel.storageUiState.pathDeque,
-                    onBarItemClick = viewModel::moveToPreviousSpecifiedDirectory,
-                    modifier = Modifier.padding(16.dp)
-                )
-                StorageScreenCard(
-                    files = uiState.files,
-                    onItemClick = { item ->
-                        when (item.isFile) {
-                            // If item is file, open it
-                            true -> {
-                                openFile(item, context)
-                            }
-                            // Otherwise, if it's a directory, go to that directory
-                            false -> {
-                                viewModel.moveToDirectory(item.name)
-                            }
-                        }
-                    },
-                    onLongItemClick = {/*TODO*/ },
-                )
-            }
-            StorageContextMenu(modifier = Modifier.align(Alignment.BottomCenter))
-        }
-    }
-}
-
-/** Context menu that slides down from the bottom of the screen**/
-@Composable
-fun StorageContextMenu(modifier: Modifier = Modifier) {
-    Surface(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        LazyRow(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.padding(
-                start = 16.dp,
-                top = 4.dp,
-                end = 16.dp,
-                bottom = 4.dp
-            )
+        Column(
+            modifier = modifier.padding(innerPadding)
         ) {
-            items(5) {
-                Surface(
-                    shape = RoundedCornerShape(20.dp),
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .clickable { /* TODO and separate into column into function*/ }
-                            .padding(
-                                start = 8.dp,
-                                top = 4.dp,
-                                end = 8.dp,
-                                bottom = 4.dp
-                            )
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.folder),
-                            contentDescription = "TODO",
-                            modifier = Modifier
-                                .size(32.dp)
-                        )
-                        Text(text = "Action")
+            StorageScrollableBar(
+                directoriesNames = viewModel.storageUiState.pathDeque,
+                onBarItemClick = viewModel::moveToPreviousSpecifiedDirectory,
+                modifier = Modifier.padding(16.dp)
+            )
+            StorageScreenCard(
+                files = uiState.files,
+                onItemClick = { item ->
+                    when (item.isFile) {
+                        // If item is file, open it
+                        true -> {
+                            openFile(item, context)
+                        }
+                        // Otherwise, if it's a directory, go to that directory
+                        false -> {
+                            viewModel.moveToDirectory(item.name)
+                        }
                     }
-                }
-            }
+                },
+                onLongItemClick = {/*TODO*/ },
+            )
         }
     }
 }
@@ -283,4 +236,50 @@ fun StorageTopBar() {
             }
         }
     )
+}
+
+/** Context menu that slides down from the bottom of the screen**/
+@Composable
+fun StorageBottomContextBar(modifier: Modifier = Modifier) {
+    BottomAppBar(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+        modifier = modifier
+    ) {
+        LazyRow(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .padding(
+                    start = 8.dp,
+                    end = 8.dp,
+                )
+                .fillMaxWidth()
+        ) {
+            items(5) {
+                Surface(
+                    color = MaterialTheme.colorScheme.surfaceContainerLow,
+                    shape = RoundedCornerShape(20.dp),
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .clickable { /* TODO and separate into column into function*/ }
+                            .padding(
+                                start = 8.dp,
+                                top = 4.dp,
+                                end = 8.dp,
+                                bottom = 4.dp
+                            )
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.folder),
+                            contentDescription = "TODO",
+                            modifier = Modifier
+                                .size(32.dp)
+                        )
+                        Text(text = "Action")
+                    }
+                }
+            }
+        }
+    }
 }
