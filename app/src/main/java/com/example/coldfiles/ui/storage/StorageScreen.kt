@@ -2,9 +2,12 @@ package com.example.coldfiles.ui.storage
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -38,6 +41,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -58,6 +65,8 @@ fun StorageScreen(
     val uiState = viewModel.storageUiState
     val context = LocalContext.current
 
+    var isContextMenuOpened by remember { mutableStateOf(false) }
+
     BackHandler {
         viewModel.moveToPreviousDirectory()
         if (uiState.pathDeque.isEmpty())
@@ -66,7 +75,23 @@ fun StorageScreen(
 
     Scaffold(
         topBar = { StorageTopBar() },
-        bottomBar = { StorageBottomContextBar() }
+        bottomBar = {
+            AnimatedVisibility(
+                visible = isContextMenuOpened,
+                enter = slideInVertically(
+                    initialOffsetY = { it/2 },
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioLowBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
+                ),
+                exit = slideOutVertically(
+                    targetOffsetY = { it/2 },
+                )
+            ) {
+                StorageBottomContextBar()
+            }
+        }
     ) { innerPadding ->
         Column(
             modifier = modifier.padding(innerPadding)
@@ -90,7 +115,7 @@ fun StorageScreen(
                         }
                     }
                 },
-                onLongItemClick = {/*TODO*/ },
+                onLongItemClick = { isContextMenuOpened = !isContextMenuOpened },
             )
         }
     }
