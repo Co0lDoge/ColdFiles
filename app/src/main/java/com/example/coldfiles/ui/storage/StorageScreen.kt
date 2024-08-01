@@ -8,9 +8,12 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -48,7 +51,7 @@ import java.text.DateFormat
 
 
 @Composable
-/** Top-level composable that holds reference to uiState **/
+        /** Top-level composable that holds reference to uiState **/
 fun StorageScreen(
     modifier: Modifier = Modifier,
     viewModel: StorageViewModel = viewModel()
@@ -65,36 +68,82 @@ fun StorageScreen(
     Scaffold(
         topBar = { StorageTopBar() }
     ) { innerPadding ->
-        Column(
-            modifier = modifier.padding(innerPadding)
-        ) {
-            StorageScrollableBar(
-                directoriesNames = viewModel.storageUiState.pathDeque,
-                onBarItemClick = viewModel::moveToPreviousSpecifiedDirectory,
-                modifier = Modifier.padding(16.dp)
-            )
-            StorageScreenCard(
-                files = uiState.files,
-                onItemClick = { item ->
-                    when (item.isFile) {
-                        // If item is file, open it
-                        true -> {
-                            openFile(item, context)
+        Box(modifier = modifier
+            .padding(innerPadding)
+            .fillMaxHeight()) {
+            Column {
+                StorageScrollableBar(
+                    directoriesNames = viewModel.storageUiState.pathDeque,
+                    onBarItemClick = viewModel::moveToPreviousSpecifiedDirectory,
+                    modifier = Modifier.padding(16.dp)
+                )
+                StorageScreenCard(
+                    files = uiState.files,
+                    onItemClick = { item ->
+                        when (item.isFile) {
+                            // If item is file, open it
+                            true -> {
+                                openFile(item, context)
+                            }
+                            // Otherwise, if it's a directory, go to that directory
+                            false -> {
+                                viewModel.moveToDirectory(item.name)
+                            }
                         }
-                        // Otherwise, if it's a directory, go to that directory
-                        false -> {
-                            viewModel.moveToDirectory(item.name)
-                        }
-                    }
-                },
-                onLongItemClick = {/*TODO*/},
-            )
+                    },
+                    onLongItemClick = {/*TODO*/ },
+                )
+            }
+            StorageContextMenu(modifier = Modifier.align(Alignment.BottomCenter))
         }
     }
 }
 
 @Composable
-/** Card containing grid of StorageItems **/
+fun StorageContextMenu(modifier: Modifier = Modifier) {
+    Surface(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        LazyRow(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.padding(
+                start = 16.dp,
+                top = 4.dp,
+                end = 16.dp,
+                bottom = 4.dp
+            )
+        ) {
+            items(5) {
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .clickable { /* TODO and separate into column into function*/ }
+                            .padding(
+                                start = 8.dp,
+                                top = 4.dp,
+                                end = 8.dp,
+                                bottom = 4.dp
+                            )
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.folder),
+                            contentDescription = "TODO",
+                            modifier = Modifier
+                                .size(32.dp)
+                        )
+                        Text(text = "Action")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+        /** Card containing grid of StorageItems **/
 fun StorageScreenCard(
     files: List<File>,
     onItemClick: (File) -> Unit,
@@ -124,7 +173,7 @@ fun StorageScreenCard(
                     files = files,
                     onItemClick = onItemClick,
                     onLongItemClick = onLongItemClick
-                    )
+                )
             } else {
                 Text(
                     text = "Directory is empty",
@@ -139,7 +188,7 @@ fun StorageScreenCard(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-/** Grid of StorageItems **/
+        /** Grid of StorageItems **/
 fun StorageItemGrid(
     files: List<File>,
     onItemClick: (File) -> Unit,
@@ -163,8 +212,8 @@ fun StorageItemGrid(
 }
 
 @Composable
-/** UI element that contains file/directory information
- * and provides ways to interact with it **/
+        /** UI element that contains file/directory information
+         * and provides ways to interact with it **/
 fun StorageItem(
     file: File,
     modifier: Modifier = Modifier
@@ -197,7 +246,7 @@ fun StorageItem(
 }
 
 @Composable
-/** Bar containing list of previous destinations **/
+        /** Bar containing list of previous destinations **/
 fun StorageScrollableBar(
     directoriesNames: List<String>,
     modifier: Modifier = Modifier,
@@ -220,7 +269,7 @@ fun StorageScrollableBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-/** Top bar with**/
+        /** Top bar with**/
 fun StorageTopBar() {
     CenterAlignedTopAppBar(
         title = { },
