@@ -295,27 +295,27 @@ fun StorageBottomContextBar(modifier: Modifier = Modifier) {
             StorageBottomBarItem(
                 text = "Copy",
                 action = { /* TODO */ },
-                iconRes = R.drawable.folder
+                iconRes = R.drawable.content_copy
             )
             StorageBottomBarItem(
                 text = "Move",
                 action = { /* TODO */ },
-                iconRes = R.drawable.folder
+                iconRes = R.drawable.content_move
             )
             StorageBottomBarItem(
                 text = "Share",
                 action = { /* TODO */ },
-                iconRes = R.drawable.folder
+                iconRes = R.drawable.share
             )
             StorageBottomBarItem(
                 text = "Delete",
                 action = { /* TODO */ },
-                iconRes = R.drawable.folder
+                iconRes = R.drawable.delete
             )
             StorageBottomBarItem(
                 text = "More",
                 action = { /* TODO */ },
-                iconRes = R.drawable.folder
+                iconRes = R.drawable.more_vertical
             )
         }
     }
