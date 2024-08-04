@@ -270,7 +270,7 @@ fun StorageBottomContextBar(modifier: Modifier = Modifier) {
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         modifier = modifier
     ) {
-        LazyRow(
+        Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .padding(
@@ -279,32 +279,63 @@ fun StorageBottomContextBar(modifier: Modifier = Modifier) {
                 )
                 .fillMaxWidth()
         ) {
-            items(5) {
-                Surface(
-                    color = MaterialTheme.colorScheme.surfaceContainerLow,
-                    shape = RoundedCornerShape(20.dp),
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .clickable { /* TODO and separate into column into function*/ }
-                            .padding(
-                                start = 8.dp,
-                                top = 4.dp,
-                                end = 8.dp,
-                                bottom = 4.dp
-                            )
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.folder),
-                            contentDescription = "TODO",
-                            modifier = Modifier
-                                .size(32.dp)
-                        )
-                        Text(text = "Action")
-                    }
-                }
-            }
+            StorageBottomBarItem(
+                text = "Copy",
+                action = { /* TODO */ },
+                iconRes = R.drawable.folder
+            )
+            StorageBottomBarItem(
+                text = "Move",
+                action = { /* TODO */ },
+                iconRes = R.drawable.folder
+            )
+            StorageBottomBarItem(
+                text = "Share",
+                action = { /* TODO */ },
+                iconRes = R.drawable.folder
+            )
+            StorageBottomBarItem(
+                text = "Delete",
+                action = { /* TODO */ },
+                iconRes = R.drawable.folder
+            )
+            StorageBottomBarItem(
+                text = "More",
+                action = { /* TODO */ },
+                iconRes = R.drawable.folder
+            )
+        }
+    }
+}
+
+@Composable
+fun StorageBottomBarItem(
+    text: String,
+    action: () -> Unit,
+    iconRes: Int
+) {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        shape = RoundedCornerShape(20.dp),
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .clickable { action() }
+                .padding(
+                    start = 8.dp,
+                    top = 4.dp,
+                    end = 8.dp,
+                    bottom = 4.dp
+                )
+        ) {
+            Icon(
+                painter = painterResource(iconRes),
+                contentDescription = "TODO",
+                modifier = Modifier
+                    .size(32.dp)
+            )
+            Text(text)
         }
     }
 }
