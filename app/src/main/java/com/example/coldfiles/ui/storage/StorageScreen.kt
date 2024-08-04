@@ -79,14 +79,14 @@ fun StorageScreen(
             AnimatedVisibility(
                 visible = isContextMenuOpened,
                 enter = slideInVertically(
-                    initialOffsetY = { it/2 },
+                    initialOffsetY = { it / 2 },
                     animationSpec = spring(
                         dampingRatio = Spring.DampingRatioLowBouncy,
                         stiffness = Spring.StiffnessLow
                     )
                 ),
                 exit = slideOutVertically(
-                    targetOffsetY = { it/2 },
+                    targetOffsetY = { it / 2 },
                 )
             ) {
                 StorageBottomContextBar()
@@ -231,13 +231,26 @@ fun StorageScrollableBar(
     modifier: Modifier = Modifier,
     onBarItemClick: (String) -> Unit
 ) {
-    LazyRow(modifier = modifier) {
+    LazyRow(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+    ) {
         items(directoriesNames) { directory ->
-            Text(
-                // Display "Home for root folder and directory names for others
-                text = if (directory == "") "Home" else directory,
-                modifier = Modifier.clickable { onBarItemClick(directory) }
-            )
+            if (directory == "") {
+                Icon(
+                    painter = painterResource(id = R.drawable.folder),
+                    contentDescription = "Home",
+                    modifier = Modifier
+                        .clickable { onBarItemClick(directory) }
+                        .padding(4.dp)
+                )
+            } else {
+                Text(
+                    // Display "Home for root folder and directory names for others
+                    text = directory,
+                    modifier = Modifier.clickable { onBarItemClick(directory) }
+                )
+            }
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = null
@@ -263,7 +276,7 @@ fun StorageTopBar() {
     )
 }
 
-/** Context menu that slides down from the bottom of the screen**/
+/** Context menu that slides down from the bottom of the screen **/
 @Composable
 fun StorageBottomContextBar(modifier: Modifier = Modifier) {
     BottomAppBar(
@@ -308,6 +321,7 @@ fun StorageBottomContextBar(modifier: Modifier = Modifier) {
     }
 }
 
+/** Items in bottom bar **/
 @Composable
 fun StorageBottomBarItem(
     text: String,
@@ -323,9 +337,9 @@ fun StorageBottomBarItem(
             modifier = Modifier
                 .clickable { action() }
                 .padding(
-                    start = 8.dp,
+                    start = 16.dp,
                     top = 4.dp,
-                    end = 8.dp,
+                    end = 16.dp,
                     bottom = 4.dp
                 )
         ) {
