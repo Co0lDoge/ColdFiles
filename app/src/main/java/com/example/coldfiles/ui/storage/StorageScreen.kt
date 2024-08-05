@@ -52,6 +52,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coldfiles.R
+import com.example.coldfiles.ui.components.CircularCheckbox
 import java.io.File
 import java.text.DateFormat
 
@@ -206,6 +207,15 @@ fun StorageItem(
                 end = 16.dp
             )
     ) {
+        CircularCheckbox(
+            checked = true,
+            modifier = Modifier
+                .padding(
+                    bottom = 12.dp,
+                    end = 16.dp
+                )
+                .size(20.dp)
+        )
         Icon(
             painter = if (file.isFile) painterResource(id = R.drawable.file)
             else painterResource(id = R.drawable.folder),
