@@ -93,13 +93,13 @@ fun StorageScreen(
                     initialOffsetY = { it },
                     animationSpec = tween(durationMillis = 300)
                 ) + expandVertically(
-                    animationSpec = tween(delayMillis = 300)
+                    animationSpec = tween(delayMillis = 0)
                 ),
                 exit = slideOutVertically(
                     targetOffsetY = { it },
                     animationSpec = tween(durationMillis = 300)
                 ) + shrinkVertically(
-                    animationSpec = tween(delayMillis = 300)
+                    animationSpec = tween(delayMillis = 0)
                 )
             ) {
                 StorageBottomContextBar()
@@ -241,7 +241,7 @@ fun StorageItem(
             )
         ) {
             CircularCheckbox(
-                checked = true,
+                checked = false,
                 modifier = Modifier
                     .padding(
                         bottom = 12.dp,
@@ -381,9 +381,9 @@ fun StorageBottomBarItem(
             modifier = Modifier
                 .clickable { action() }
                 .padding(
-                    start = 16.dp,
+                    start = 12.dp,
                     top = 4.dp,
-                    end = 16.dp,
+                    end = 12.dp,
                     bottom = 4.dp
                 )
         ) {
