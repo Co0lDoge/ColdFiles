@@ -8,9 +8,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
@@ -90,16 +88,14 @@ fun StorageScreen(
             AnimatedVisibility(
                 visible = isContextMenuOpened,
                 enter = slideInVertically(
-                    initialOffsetY = { it },
-                    animationSpec = tween(durationMillis = 300)
-                ) + expandVertically(
-                    animationSpec = tween(delayMillis = 0)
+                    initialOffsetY = { it / 2 },
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioLowBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
                 ),
                 exit = slideOutVertically(
-                    targetOffsetY = { it },
-                    animationSpec = tween(durationMillis = 300)
-                ) + shrinkVertically(
-                    animationSpec = tween(delayMillis = 0)
+                    targetOffsetY = { it / 2 },
                 )
             ) {
                 StorageBottomContextBar()
