@@ -6,7 +6,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -69,9 +76,12 @@ fun StorageScreen(
     var isContextMenuOpened by remember { mutableStateOf(false) }
 
     BackHandler {
-        viewModel.moveToPreviousDirectory()
-        if (uiState.pathDeque.isEmpty())
-            (context as? Activity)?.finish()
+        if (isContextMenuOpened) isContextMenuOpened = false
+        else {
+            viewModel.moveToPreviousDirectory()
+            if (uiState.pathDeque.isEmpty())
+                (context as? Activity)?.finish()
+        }
     }
 
     Scaffold(
@@ -80,14 +90,16 @@ fun StorageScreen(
             AnimatedVisibility(
                 visible = isContextMenuOpened,
                 enter = slideInVertically(
-                    initialOffsetY = { it / 2 },
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioLowBouncy,
-                        stiffness = Spring.StiffnessLow
-                    )
+                    initialOffsetY = { it },
+                    animationSpec = tween(durationMillis = 300)
+                ) + expandVertically(
+                    animationSpec = tween(delayMillis = 300)
                 ),
                 exit = slideOutVertically(
-                    targetOffsetY = { it / 2 },
+                    targetOffsetY = { it },
+                    animationSpec = tween(durationMillis = 300)
+                ) + shrinkVertically(
+                    animationSpec = tween(delayMillis = 300)
                 )
             ) {
                 StorageBottomContextBar()
@@ -116,7 +128,8 @@ fun StorageScreen(
                         }
                     }
                 },
-                onLongItemClick = { isContextMenuOpened = !isContextMenuOpened },
+                onLongItemClick = { isContextMenuOpened = true },
+                showCheckBoxes = isContextMenuOpened
             )
         }
     }
@@ -128,6 +141,7 @@ fun StorageScreenCard(
     files: List<File>,
     onItemClick: (File) -> Unit,
     onLongItemClick: (File) -> Unit,
+    showCheckBoxes: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -152,7 +166,8 @@ fun StorageScreenCard(
                 StorageItemGrid(
                     files = files,
                     onItemClick = onItemClick,
-                    onLongItemClick = onLongItemClick
+                    onLongItemClick = onLongItemClick,
+                    showCheckBoxes = showCheckBoxes
                 )
             } else {
                 Text(
@@ -173,6 +188,7 @@ fun StorageItemGrid(
     files: List<File>,
     onItemClick: (File) -> Unit,
     onLongItemClick: (File) -> Unit,
+    showCheckBoxes: Boolean,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -182,6 +198,7 @@ fun StorageItemGrid(
         items(files) { file ->
             StorageItem(
                 file = file,
+                showCheckBox = showCheckBoxes,
                 modifier = Modifier.combinedClickable(
                     onClick = { onItemClick(file) },
                     onLongClick = { onLongItemClick(file) },
@@ -196,6 +213,7 @@ fun StorageItemGrid(
 @Composable
 fun StorageItem(
     file: File,
+    showCheckBox: Boolean,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -207,15 +225,31 @@ fun StorageItem(
                 end = 16.dp
             )
     ) {
-        CircularCheckbox(
-            checked = true,
-            modifier = Modifier
-                .padding(
-                    bottom = 12.dp,
-                    end = 16.dp
-                )
-                .size(20.dp)
-        )
+        AnimatedVisibility(
+            visible = showCheckBox,
+            enter = slideInHorizontally(
+                initialOffsetX = { -it },
+                animationSpec = tween(durationMillis = 300)
+            ) + expandHorizontally(
+                animationSpec = tween(delayMillis = 300)
+            ),
+            exit = slideOutHorizontally(
+                targetOffsetX = { -it },
+                animationSpec = tween(durationMillis = 300)
+            ) + shrinkHorizontally(
+                animationSpec = tween(delayMillis = 300)
+            )
+        ) {
+            CircularCheckbox(
+                checked = true,
+                modifier = Modifier
+                    .padding(
+                        bottom = 12.dp,
+                        end = 16.dp
+                    )
+                    .size(20.dp)
+            )
+        }
         Icon(
             painter = if (file.isFile) painterResource(id = R.drawable.file)
             else painterResource(id = R.drawable.folder),
