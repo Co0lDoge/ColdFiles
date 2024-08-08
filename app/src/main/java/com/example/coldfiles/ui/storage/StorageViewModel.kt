@@ -93,4 +93,9 @@ class StorageViewModel : ViewModel() {
         }
         storageUiState.selectedIndexes.add(itemIndex)
     }
+
+    /** Removes all indexes from selectedIndexes list **/
+    fun resetItemSelection() {
+        storageUiState.selectedIndexes.clear()
+    }
 }

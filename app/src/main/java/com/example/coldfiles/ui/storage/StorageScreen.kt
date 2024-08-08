@@ -74,7 +74,10 @@ fun StorageScreen(
     var isContextMenuOpened by remember { mutableStateOf(false) }
 
     BackHandler {
-        if (isContextMenuOpened) isContextMenuOpened = false
+        if (isContextMenuOpened) {
+            isContextMenuOpened = false
+            viewModel.resetItemSelection()
+        }
         else {
             viewModel.moveToPreviousDirectory()
             if (uiState.pathDeque.isEmpty())
