@@ -44,6 +44,7 @@ class MainActivity : ComponentActivity() {
      * if granted, launch the StorageScreen,
      * else show dialog asking for permission**/
     private fun launchStorageApp() {
+        enableEdgeToEdge()
         setContent {
             ColdFilesTheme {
                 Surface(
@@ -54,7 +55,6 @@ class MainActivity : ComponentActivity() {
                         isActivityLaunched = true
                         StorageScreen()
                     } else {
-                        enableEdgeToEdge()
                         StorageAlertDialog(
                             onDismissRequest = { finish() },
                             onConfirmation = {
