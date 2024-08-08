@@ -2,8 +2,10 @@ package com.example.coldfiles.ui.storage
 
 import android.os.Environment
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import java.io.File
 import java.security.InvalidParameterException
@@ -13,7 +15,8 @@ val BASE_PATH = Environment.getExternalStorageDirectory().toString()
 data class StorageUiState(
     // Defaults to root folder path
     val pathDeque: ArrayDeque<String> = ArrayDeque(),
-    val files: List<File> = listOf()
+    val files: List<File> = listOf(),
+    val selectedIndexes: SnapshotStateList<Int> = mutableStateListOf()
 )
 
 class StorageViewModel : ViewModel() {
@@ -73,5 +76,21 @@ class StorageViewModel : ViewModel() {
         }
 
         moveToDirectory()
+    }
+
+    /** Check if current item's index present in selectedIndexes list **/
+    fun checkItemSelection(item: File): Boolean {
+        val itemIndex = storageUiState.files.indexOf(item)
+        return storageUiState.selectedIndexes.contains(itemIndex)
+    }
+
+    /** Adds or removes current item's index in selectedIndexes list **/
+    fun updateItemSelection(item: File) {
+        val itemIndex = storageUiState.files.indexOf(item)
+        if (storageUiState.selectedIndexes.contains(itemIndex)) {
+            storageUiState.selectedIndexes.remove(itemIndex)
+            return
+        }
+        storageUiState.selectedIndexes.add(itemIndex)
     }
 }

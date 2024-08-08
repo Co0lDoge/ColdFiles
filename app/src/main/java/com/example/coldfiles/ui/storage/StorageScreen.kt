@@ -113,19 +113,29 @@ fun StorageScreen(
             StorageScreenCard(
                 files = uiState.files,
                 onItemClick = { item ->
-                    when (item.isFile) {
-                        // If item is file, open it
-                        true -> {
-                            openFile(item, context)
-                        }
-                        // Otherwise, if it's a directory, go to that directory
-                        false -> {
-                            viewModel.moveToDirectory(item.name)
+                    if (isContextMenuOpened) {
+                        viewModel.updateItemSelection(item)
+                    }
+                    else {
+                        when (item.isFile) {
+                            // If item is file, open it
+                            true -> {
+                                openFile(item, context)
+                            }
+                            // Otherwise, if it's a directory, go to that directory
+                            false -> {
+                                viewModel.moveToDirectory(item.name)
+                            }
                         }
                     }
+
                 },
-                onLongItemClick = { isContextMenuOpened = true },
-                showCheckBoxes = isContextMenuOpened
+                onLongItemClick = {
+                    isContextMenuOpened = true
+                    viewModel.updateItemSelection(it)
+                },
+                showCheckBoxes = isContextMenuOpened,
+                checkSelection = viewModel::checkItemSelection
             )
         }
     }
@@ -138,6 +148,7 @@ fun StorageScreenCard(
     onItemClick: (File) -> Unit,
     onLongItemClick: (File) -> Unit,
     showCheckBoxes: Boolean,
+    checkSelection: (File) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -163,7 +174,8 @@ fun StorageScreenCard(
                     files = files,
                     onItemClick = onItemClick,
                     onLongItemClick = onLongItemClick,
-                    showCheckBoxes = showCheckBoxes
+                    showCheckBoxes = showCheckBoxes,
+                    checkSelection = checkSelection
                 )
             } else {
                 Text(
@@ -185,6 +197,7 @@ fun StorageItemGrid(
     onItemClick: (File) -> Unit,
     onLongItemClick: (File) -> Unit,
     showCheckBoxes: Boolean,
+    checkSelection: (File) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -195,6 +208,7 @@ fun StorageItemGrid(
             StorageItem(
                 file = file,
                 showCheckBox = showCheckBoxes,
+                checkSelection = checkSelection,
                 modifier = Modifier.combinedClickable(
                     onClick = { onItemClick(file) },
                     onLongClick = { onLongItemClick(file) },
@@ -210,6 +224,7 @@ fun StorageItemGrid(
 fun StorageItem(
     file: File,
     showCheckBox: Boolean,
+    checkSelection: (File) -> Boolean,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -237,7 +252,7 @@ fun StorageItem(
             )
         ) {
             CircularCheckbox(
-                checked = false,
+                checked = checkSelection(file),
                 modifier = Modifier
                     .padding(
                         bottom = 12.dp,
