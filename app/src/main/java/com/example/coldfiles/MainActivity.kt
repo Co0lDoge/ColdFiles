@@ -62,8 +62,9 @@ class MainActivity : ComponentActivity() {
                                 ContextCompat.startActivity(this, intent, null)
                             },
                             dialogTitle = "Storage permission required",
-                            dialogText = "This is a file manager and requires access to all files." +
-                                    " Press confirm to provide permission or dismiss to exit the app",
+                            dialogText = "This is a file manager that requires access to all files." +
+                                    " Press Confirm to grant permission" +
+                                    " or Dismiss to exit the application.",
                             icon = Icons.Default.Warning
                         )
                     }
