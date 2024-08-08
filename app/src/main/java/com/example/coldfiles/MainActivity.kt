@@ -33,53 +33,43 @@ class MainActivity : ComponentActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        Log.v("Storage", "Activity restarted")
+        Log.v("StorageActivity", "Activity restarted")
         if (!isActivityLaunched) {
-            Log.v("Storage", "Activity relaunched")
+            Log.v("StorageActivity", "Activity relaunched")
             launchStorageApp()
         }
     }
 
+    /** Check storage permission,
+     * if granted, launch the StorageScreen,
+     * else show dialog asking for permission**/
     private fun launchStorageApp() {
-        if (Environment.isExternalStorageManager()) {
-            isActivityLaunched = true
-            enableEdgeToEdge()
-            setContent {
-                ColdFilesTheme {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
+        setContent {
+            ColdFilesTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    if (Environment.isExternalStorageManager()) {
+                        isActivityLaunched = true
                         StorageScreen()
-                    }
-                }
-            }
-        } else {
-            enableEdgeToEdge()
-            setContent {
-                ColdFilesTheme {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
+                    } else {
+                        enableEdgeToEdge()
                         StorageAlertDialog(
-                            onDismissRequest = {
-                                finish()
-                            },
+                            onDismissRequest = { finish() },
                             onConfirmation = {
-                                val intent =
-                                    Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                                val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
                                 ContextCompat.startActivity(this, intent, null)
                             },
                             dialogTitle = "Storage permission required",
-                            dialogText = "This is file manager and requires access to" +
-                                    " all files. Press Confirm to grant permission" +
-                                    " or Dismiss to exit the application.",
+                            dialogText = "This is a file manager and requires access to all files." +
+                                    " Press confirm to provide permission or dismiss to exit the app",
                             icon = Icons.Default.Warning
                         )
                     }
                 }
             }
         }
+
     }
 }
