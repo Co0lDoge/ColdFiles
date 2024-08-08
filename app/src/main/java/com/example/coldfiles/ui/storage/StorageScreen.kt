@@ -101,7 +101,12 @@ fun StorageScreen(
                     targetOffsetY = { it / 2 },
                 )
             ) {
-                StorageBottomContextBar()
+                StorageBottomContextBar(
+                    onDeleteClick = {
+                        isContextMenuOpened = false
+                        viewModel.deleteItems()
+                    }
+                )
             }
         }
     ) { innerPadding ->
@@ -336,7 +341,10 @@ fun StorageTopBar() {
 
 /** Context menu that slides down from the bottom of the screen **/
 @Composable
-fun StorageBottomContextBar(modifier: Modifier = Modifier) {
+fun StorageBottomContextBar(
+    onDeleteClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     BottomAppBar(
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         modifier = modifier
@@ -367,7 +375,7 @@ fun StorageBottomContextBar(modifier: Modifier = Modifier) {
             )
             StorageBottomBarItem(
                 text = "Delete",
-                action = { /* TODO */ },
+                action = { onDeleteClick() },
                 iconRes = R.drawable.delete
             )
             StorageBottomBarItem(

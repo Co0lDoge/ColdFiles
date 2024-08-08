@@ -98,4 +98,16 @@ class StorageViewModel : ViewModel() {
     fun resetItemSelection() {
         storageUiState.selectedIndexes.clear()
     }
+
+    /** Deletes all selected items **/
+    fun deleteItems() {
+        val selectedItems = storageUiState.files.slice(storageUiState.selectedIndexes)
+        selectedItems.forEach { item ->
+            item.delete()
+        }
+
+        // Move to the same directory to trigger recomposition
+        resetItemSelection()
+        moveToDirectory()
+    }
 }
