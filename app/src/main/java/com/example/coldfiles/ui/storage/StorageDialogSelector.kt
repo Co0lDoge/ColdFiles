@@ -25,7 +25,7 @@ fun StorageDialogSelector(
             },
             onConfirmation = {
                 onConfirmation()
-                viewModel.deleteItems()
+                viewModel.deleteSelectedItems()
             },
             dialogTitle = "File deletion alert",
             dialogText = "Confirm to delete these items: \n${

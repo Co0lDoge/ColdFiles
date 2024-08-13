@@ -99,20 +99,34 @@ class StorageViewModel : ViewModel() {
         storageUiState.selectedIndexes.clear()
     }
 
+    /** Returns list of all selected files names **/
     fun getSelectedItemNamesList(): List<String> {
         return storageUiState.files.slice(storageUiState.selectedIndexes).map { it.name }
     }
 
-    /** Deletes all selected items **/
-    // TODO: fix nested folders not being deleted
-    fun deleteItems() {
+    /** Delete all selected items **/
+    fun deleteSelectedItems() {
         val selectedItems = storageUiState.files.slice(storageUiState.selectedIndexes)
         selectedItems.forEach { item ->
-            item.delete()
+            deleteItem(item)
         }
 
         // Move to the same directory to trigger recomposition
         resetItemSelection()
         moveToDirectory()
+    }
+
+    /** Delete items, if it's a folder, delete all nested items **/
+    private fun deleteItem(item: File): Boolean {
+        if (item.exists()) {
+            if (item.isDirectory) {
+                val files = item.listFiles()
+                for (file in files!!) {
+                    deleteItem(file)
+                }
+            }
+            return item.delete()
+        }
+        return false
     }
 }
