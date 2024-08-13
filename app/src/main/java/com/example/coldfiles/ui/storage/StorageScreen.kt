@@ -61,7 +61,6 @@ import com.example.coldfiles.ui.components.CircularCheckbox
 import java.io.File
 import java.text.DateFormat
 
-
 /** Top-level composable that holds reference to uiState **/
 @Composable
 fun StorageScreen(
@@ -72,13 +71,23 @@ fun StorageScreen(
     val context = LocalContext.current
 
     var isContextMenuOpened by remember { mutableStateOf(false) }
+    var selectedDialog: SelectedDialog by remember { mutableStateOf(SelectedDialog.NoDialog) }
+
+    StorageDialogSelector(
+        selectedDialog = selectedDialog,
+        onDismissRequest = { selectedDialog = SelectedDialog.NoDialog },
+        onConfirmation = {
+            isContextMenuOpened = false
+            selectedDialog = SelectedDialog.NoDialog
+        },
+        viewModel = viewModel
+    )
 
     BackHandler {
         if (isContextMenuOpened) {
             isContextMenuOpened = false
             viewModel.resetItemSelection()
-        }
-        else {
+        } else {
             viewModel.moveToPreviousDirectory()
             if (uiState.pathDeque.isEmpty())
                 (context as? Activity)?.finish()
@@ -103,8 +112,7 @@ fun StorageScreen(
             ) {
                 StorageBottomContextBar(
                     onDeleteClick = {
-                        isContextMenuOpened = false
-                        viewModel.deleteItems()
+                        selectedDialog = SelectedDialog.DeleteDialog
                     }
                 )
             }
@@ -123,8 +131,7 @@ fun StorageScreen(
                 onItemClick = { item ->
                     if (isContextMenuOpened) {
                         viewModel.updateItemSelection(item)
-                    }
-                    else {
+                    } else {
                         when (item.isFile) {
                             // If item is file, open it
                             true -> {

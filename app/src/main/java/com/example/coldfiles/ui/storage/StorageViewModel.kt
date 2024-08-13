@@ -99,7 +99,12 @@ class StorageViewModel : ViewModel() {
         storageUiState.selectedIndexes.clear()
     }
 
+    fun getSelectedItemNamesList(): List<String> {
+        return storageUiState.files.slice(storageUiState.selectedIndexes).map { it.name }
+    }
+
     /** Deletes all selected items **/
+    // TODO: fix nested folders not being deleted
     fun deleteItems() {
         val selectedItems = storageUiState.files.slice(storageUiState.selectedIndexes)
         selectedItems.forEach { item ->
