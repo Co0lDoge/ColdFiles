@@ -70,21 +70,20 @@ fun StorageScreen(
 
     var selectedDialog: SelectedDialog by remember { mutableStateOf(SelectedDialog.NoDialog) }
     var selectedBottomBar: SelectedBottomBar by remember { mutableStateOf(SelectedBottomBar.NoBar) }
-    var isContextMenuOpened by remember { mutableStateOf(false) }
 
     StorageDialogSelector(
         selectedDialog = selectedDialog,
         onDismissRequest = { selectedDialog = SelectedDialog.NoDialog },
         onConfirmation = {
-            isContextMenuOpened = false
+            selectedBottomBar = SelectedBottomBar.NoBar
             selectedDialog = SelectedDialog.NoDialog
         },
         viewModel = viewModel
     )
 
     BackHandler {
-        if (isContextMenuOpened) {
-            isContextMenuOpened = false
+        if (selectedBottomBar == SelectedBottomBar.ContextBar) {
+            selectedBottomBar = SelectedBottomBar.NoBar
             viewModel.resetItemSelection()
         } else {
             viewModel.moveToPreviousDirectory()
@@ -97,7 +96,7 @@ fun StorageScreen(
         topBar = { StorageTopBar() },
         bottomBar = {
             AnimatedVisibility(
-                visible = isContextMenuOpened,
+                visible = selectedBottomBar != SelectedBottomBar.NoBar,
                 enter = slideInVertically(
                     initialOffsetY = { it / 2 },
                     animationSpec = spring(
@@ -129,7 +128,7 @@ fun StorageScreen(
             StorageScreenCard(
                 files = uiState.files,
                 onItemClick = { item ->
-                    if (isContextMenuOpened) {
+                    if (selectedBottomBar == SelectedBottomBar.ContextBar) {
                         viewModel.updateItemSelection(item)
                     } else {
                         when (item.isFile) {
@@ -146,10 +145,10 @@ fun StorageScreen(
 
                 },
                 onLongItemClick = {
-                    isContextMenuOpened = true
+                    selectedBottomBar = SelectedBottomBar.ContextBar
                     viewModel.updateItemSelection(it)
                 },
-                showCheckBoxes = isContextMenuOpened,
+                showCheckBoxes = selectedBottomBar == SelectedBottomBar.ContextBar,
                 checkSelection = viewModel::checkItemSelection
             )
         }
