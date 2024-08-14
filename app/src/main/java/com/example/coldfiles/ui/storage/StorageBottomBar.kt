@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +24,7 @@ import com.example.coldfiles.R
 import com.example.coldfiles.ui.theme.ColdFilesTheme
 
 sealed interface SelectedBottomBar {
-    data object NoBar: SelectedBottomBar
+    data object NoBar : SelectedBottomBar
     data object ContextBar : SelectedBottomBar
     data object CopyBar : SelectedBottomBar
     data object MoveBar : SelectedBottomBar
@@ -31,7 +32,11 @@ sealed interface SelectedBottomBar {
 
 @Composable
 fun StorageBottomBar(
+    onCopyClick: () -> Unit,
+    onMoveClick: () -> Unit,
+    onShareClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onMoreClick: () -> Unit,
     selectedBottomBar: SelectedBottomBar,
     modifier: Modifier = Modifier
 ) {
@@ -42,17 +47,18 @@ fun StorageBottomBar(
         when (selectedBottomBar) {
             SelectedBottomBar.ContextBar -> {
                 StorageBottomContextBar(
-                    onDeleteClick = onDeleteClick,
+                    onCopyClick, onMoveClick, onShareClick, onDeleteClick, onMoreClick
                 )
             }
 
-            SelectedBottomBar.CopyBar -> { /* TODO */
+            SelectedBottomBar.CopyBar -> {
+                StorageCopyBar()
             }
 
             SelectedBottomBar.MoveBar -> { /* TODO */
             }
 
-            SelectedBottomBar.NoBar -> {  }
+            SelectedBottomBar.NoBar -> {}
         }
     }
 }
@@ -60,7 +66,11 @@ fun StorageBottomBar(
 /** Context menu that slides down from the bottom of the screen **/
 @Composable
 fun StorageBottomContextBar(
+    onCopyClick: () -> Unit,
+    onMoveClick: () -> Unit,
+    onShareClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onMoreClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -74,17 +84,17 @@ fun StorageBottomContextBar(
     ) {
         StorageBottomBarItem(
             text = "Copy",
-            action = { /* TODO */ },
+            action = { onCopyClick() },
             iconRes = R.drawable.content_copy
         )
         StorageBottomBarItem(
             text = "Move",
-            action = { /* TODO */ },
+            action = { onMoveClick() },
             iconRes = R.drawable.content_move
         )
         StorageBottomBarItem(
             text = "Share",
-            action = { /* TODO */ },
+            action = { onShareClick() },
             iconRes = R.drawable.share
         )
         StorageBottomBarItem(
@@ -94,11 +104,55 @@ fun StorageBottomContextBar(
         )
         StorageBottomBarItem(
             text = "More",
-            action = { /* TODO */ },
+            action = { onMoreClick() },
             iconRes = R.drawable.more_vertical
         )
     }
+}
 
+@Composable
+fun StorageCopyBar(
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
+            .padding(
+                start = 8.dp,
+                end = 8.dp,
+            )
+            .fillMaxWidth()
+            .height(64.dp)
+    ) {
+        Icon(painter = painterResource(R.drawable.folder), contentDescription = "file")
+        Row {
+            Surface(
+                shape = RoundedCornerShape(32.dp),
+                color = MaterialTheme.colorScheme.surfaceContainerLow,
+                modifier = Modifier.clickable {
+                }
+            ) {
+                Text(
+                    text = "Cancel",
+                    modifier = Modifier.padding(8.dp)
+                )
+
+            }
+            Surface(
+                shape = RoundedCornerShape(32.dp),
+                color = MaterialTheme.colorScheme.surfaceContainerLow,
+                modifier = Modifier.clickable {
+                }
+            ) {
+                Text(
+                    text = "Copy Here",
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+
+        }
+    }
 }
 
 /** Items in bottom bar **/
@@ -142,7 +196,26 @@ fun StorageBottomContextBarPreview() {
             color = MaterialTheme.colorScheme.surfaceContainerLow,
             shape = RoundedCornerShape(20.dp),
         ) {
-            StorageBottomContextBar(onDeleteClick = { /*TODO*/ })
+            StorageBottomContextBar(
+                onCopyClick = {},
+                onMoveClick = {},
+                onShareClick = {},
+                onDeleteClick = {},
+                onMoreClick = {}
+            )
+        }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun StorageCopyBarPreview() {
+    ColdFilesTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
+            shape = RoundedCornerShape(20.dp),
+        ) {
+            StorageCopyBar()
         }
     }
 }

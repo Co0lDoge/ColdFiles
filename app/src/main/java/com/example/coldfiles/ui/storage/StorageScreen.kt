@@ -109,10 +109,15 @@ fun StorageScreen(
                 )
             ) {
                 StorageBottomBar(
-                    selectedBottomBar = SelectedBottomBar.ContextBar,
+                    selectedBottomBar = selectedBottomBar,
+                    onCopyClick = { selectedBottomBar = SelectedBottomBar.CopyBar },
+                    onMoveClick = { /* TODO */},
+                    onShareClick = { /* TODO */},
                     onDeleteClick = {
                         selectedDialog = SelectedDialog.DeleteDialog
                     },
+                    onMoreClick = { /* TODO */},
+
                 )
             }
         }
