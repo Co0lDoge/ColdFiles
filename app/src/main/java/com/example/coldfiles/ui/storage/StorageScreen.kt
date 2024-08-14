@@ -16,7 +16,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,7 +32,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -70,8 +68,9 @@ fun StorageScreen(
     val uiState = viewModel.storageUiState
     val context = LocalContext.current
 
-    var isContextMenuOpened by remember { mutableStateOf(false) }
     var selectedDialog: SelectedDialog by remember { mutableStateOf(SelectedDialog.NoDialog) }
+    var selectedBottomBar: SelectedBottomBar by remember { mutableStateOf(SelectedBottomBar.NoBar) }
+    var isContextMenuOpened by remember { mutableStateOf(false) }
 
     StorageDialogSelector(
         selectedDialog = selectedDialog,
@@ -110,10 +109,11 @@ fun StorageScreen(
                     targetOffsetY = { it / 2 },
                 )
             ) {
-                StorageBottomContextBar(
+                StorageBottomBar(
+                    selectedBottomBar = SelectedBottomBar.ContextBar,
                     onDeleteClick = {
                         selectedDialog = SelectedDialog.DeleteDialog
-                    }
+                    },
                 )
             }
         }
@@ -344,85 +344,4 @@ fun StorageTopBar() {
             }
         }
     )
-}
-
-/** Context menu that slides down from the bottom of the screen **/
-@Composable
-fun StorageBottomContextBar(
-    onDeleteClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    BottomAppBar(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        modifier = modifier
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .padding(
-                    start = 8.dp,
-                    end = 8.dp,
-                )
-                .fillMaxWidth()
-        ) {
-            StorageBottomBarItem(
-                text = "Copy",
-                action = { /* TODO */ },
-                iconRes = R.drawable.content_copy
-            )
-            StorageBottomBarItem(
-                text = "Move",
-                action = { /* TODO */ },
-                iconRes = R.drawable.content_move
-            )
-            StorageBottomBarItem(
-                text = "Share",
-                action = { /* TODO */ },
-                iconRes = R.drawable.share
-            )
-            StorageBottomBarItem(
-                text = "Delete",
-                action = { onDeleteClick() },
-                iconRes = R.drawable.delete
-            )
-            StorageBottomBarItem(
-                text = "More",
-                action = { /* TODO */ },
-                iconRes = R.drawable.more_vertical
-            )
-        }
-    }
-}
-
-/** Items in bottom bar **/
-@Composable
-fun StorageBottomBarItem(
-    text: String,
-    action: () -> Unit,
-    iconRes: Int
-) {
-    Surface(
-        color = MaterialTheme.colorScheme.surfaceContainerLow,
-        shape = RoundedCornerShape(20.dp),
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .clickable { action() }
-                .padding(
-                    start = 12.dp,
-                    top = 4.dp,
-                    end = 12.dp,
-                    bottom = 4.dp
-                )
-        ) {
-            Icon(
-                painter = painterResource(iconRes),
-                contentDescription = "TODO",
-                modifier = Modifier
-                    .size(32.dp)
-            )
-            Text(text)
-        }
-    }
 }
