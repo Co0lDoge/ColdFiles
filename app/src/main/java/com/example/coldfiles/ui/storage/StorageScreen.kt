@@ -124,7 +124,12 @@ fun StorageScreen(
                         selectedBottomBar = SelectedBottomBar.NoBar
                         viewModel.resetSavedItems()
                     },
+                    onConfirmClick = {
+                        selectedBottomBar = SelectedBottomBar.NoBar
+                        viewModel.resetSavedItems()
+                    },
                     savedItems = viewModel.savedFiles,
+                    viewModel = viewModel
 
                     )
             }
