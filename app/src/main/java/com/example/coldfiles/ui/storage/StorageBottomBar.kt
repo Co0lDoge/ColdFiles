@@ -63,11 +63,21 @@ fun StorageBottomBar(
                     onConfirmClick = {
                         viewModel.copySavedItems()
                         onConfirmClick()
-                    }
+                    },
+                    confirmText = "Copy Here"
                 )
             }
 
-            SelectedBottomBar.MoveBar -> { /* TODO */
+            SelectedBottomBar.MoveBar -> {
+                StorageCopyBar(
+                    savedItems = savedItems,
+                    onCancelClick = onCancelClick,
+                    onConfirmClick = {
+                        viewModel.moveSavedItems()
+                        onConfirmClick()
+                    },
+                    confirmText = "Move Here"
+                )
             }
 
             SelectedBottomBar.NoBar -> {}
@@ -127,6 +137,7 @@ fun StorageCopyBar(
     savedItems: List<File>,
     onCancelClick: () -> Unit,
     onConfirmClick: () -> Unit,
+    confirmText: String,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -173,7 +184,7 @@ fun StorageCopyBar(
                 }
             ) {
                 Text(
-                    text = "Copy Here",
+                    text = confirmText,
                     modifier = Modifier.padding(8.dp)
                 )
             }
@@ -245,7 +256,8 @@ fun StorageCopyBarPreview() {
             StorageCopyBar(
                 savedItems = listOf(),
                 onCancelClick = { },
-                onConfirmClick = { }
+                onConfirmClick = { },
+                confirmText = "Copy Here"
             )
         }
     }

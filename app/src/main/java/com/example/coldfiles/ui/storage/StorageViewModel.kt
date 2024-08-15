@@ -147,7 +147,15 @@ class StorageViewModel : ViewModel() {
     /** Copy saved files to current path **/
     fun copySavedItems() {
         savedFiles.forEach { file ->
-            file.copyTo(File(fullPath + "/" + file.name))
+            file.copyRecursively(File(fullPath + "/" + file.name))
+        }
+        moveToDirectory()
+    }
+
+    /** Copy saved files to current path **/
+    fun moveSavedItems() {
+        savedFiles.forEach { file ->
+            file.renameTo(File(fullPath + "/" + file.name))
         }
         moveToDirectory()
     }

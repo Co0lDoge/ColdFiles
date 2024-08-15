@@ -112,9 +112,14 @@ fun StorageScreen(
                     selectedBottomBar = selectedBottomBar,
                     onCopyClick = {
                         viewModel.createSavedFiles()
+                        viewModel.resetItemSelection()
                         selectedBottomBar = SelectedBottomBar.CopyBar
                     },
-                    onMoveClick = { /* TODO */ },
+                    onMoveClick = {
+                        viewModel.createSavedFiles()
+                        viewModel.resetItemSelection()
+                        selectedBottomBar = SelectedBottomBar.MoveBar
+                    },
                     onShareClick = { /* TODO */ },
                     onDeleteClick = {
                         selectedDialog = SelectedDialog.DeleteDialog
@@ -163,8 +168,11 @@ fun StorageScreen(
 
                 },
                 onLongItemClick = {
-                    selectedBottomBar = SelectedBottomBar.ContextBar
-                    viewModel.updateItemSelection(it)
+                    /* Context bar should only open if no other bar is displayed */
+                    if (selectedBottomBar != SelectedBottomBar.CopyBar) {
+                        selectedBottomBar = SelectedBottomBar.ContextBar
+                        viewModel.updateItemSelection(it)
+                    }
                 },
                 showCheckBoxes = selectedBottomBar == SelectedBottomBar.ContextBar,
                 checkSelection = viewModel::checkItemSelection
