@@ -110,15 +110,18 @@ fun StorageScreen(
             ) {
                 StorageBottomBar(
                     selectedBottomBar = selectedBottomBar,
-                    onCopyClick = { selectedBottomBar = SelectedBottomBar.CopyBar },
-                    onMoveClick = { /* TODO */},
-                    onShareClick = { /* TODO */},
+                    onCopyClick = {
+                        viewModel.createSavedFiles()
+                        selectedBottomBar = SelectedBottomBar.CopyBar
+                    },
+                    onMoveClick = { /* TODO */ },
+                    onShareClick = { /* TODO */ },
                     onDeleteClick = {
                         selectedDialog = SelectedDialog.DeleteDialog
                     },
-                    onMoreClick = { /* TODO */},
-
-                )
+                    onMoreClick = { /* TODO */ },
+                    savedItems = viewModel.savedFiles
+                    )
             }
         }
     ) { innerPadding ->

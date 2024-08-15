@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.coldfiles.R
 import com.example.coldfiles.ui.theme.ColdFilesTheme
+import java.io.File
 
 sealed interface SelectedBottomBar {
     data object NoBar : SelectedBottomBar
@@ -38,6 +39,7 @@ fun StorageBottomBar(
     onDeleteClick: () -> Unit,
     onMoreClick: () -> Unit,
     selectedBottomBar: SelectedBottomBar,
+    savedItems: List<File>,
     modifier: Modifier = Modifier
 ) {
     BottomAppBar(
@@ -52,7 +54,7 @@ fun StorageBottomBar(
             }
 
             SelectedBottomBar.CopyBar -> {
-                StorageCopyBar()
+                StorageCopyBar(savedItems)
             }
 
             SelectedBottomBar.MoveBar -> { /* TODO */
@@ -112,6 +114,7 @@ fun StorageBottomContextBar(
 
 @Composable
 fun StorageCopyBar(
+    savedItems: List<File>,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -125,7 +128,17 @@ fun StorageCopyBar(
             .fillMaxWidth()
             .height(64.dp)
     ) {
-        Icon(painter = painterResource(R.drawable.folder), contentDescription = "file")
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(painter = painterResource(R.drawable.folder), contentDescription = "file")
+            Text(
+                text = "${savedItems.count()} item",
+                style = MaterialTheme.typography.titleSmall
+            )
+        }
+
         Row {
             Surface(
                 shape = RoundedCornerShape(32.dp),
@@ -215,7 +228,7 @@ fun StorageCopyBarPreview() {
             color = MaterialTheme.colorScheme.surfaceContainerLow,
             shape = RoundedCornerShape(20.dp),
         ) {
-            StorageCopyBar()
+            StorageCopyBar(savedItems = listOf())
         }
     }
 }

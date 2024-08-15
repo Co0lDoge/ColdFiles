@@ -20,8 +20,12 @@ data class StorageUiState(
 )
 
 class StorageViewModel : ViewModel() {
+    /** Variable that holds state visible in UI **/
     var storageUiState by mutableStateOf(StorageUiState())
         private set
+
+    /** Saved files used for copying **/
+    var savedFiles = listOf<File>()
 
     /** Combines root directory path with directories in deque **/
     private val fullPath
@@ -128,5 +132,10 @@ class StorageViewModel : ViewModel() {
             return item.delete()
         }
         return false
+    }
+
+    /** Saves selected files for future use (Copying or Moving) **/
+    fun createSavedFiles() {
+        savedFiles = storageUiState.files.slice(storageUiState.selectedIndexes).toList()
     }
 }
