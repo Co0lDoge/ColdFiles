@@ -120,7 +120,12 @@ fun StorageScreen(
                         selectedDialog = SelectedDialog.DeleteDialog
                     },
                     onMoreClick = { /* TODO */ },
-                    savedItems = viewModel.savedFiles
+                    onCancelClick = {
+                        selectedBottomBar = SelectedBottomBar.NoBar
+                        viewModel.resetSavedItems()
+                    },
+                    savedItems = viewModel.savedFiles,
+
                     )
             }
         }

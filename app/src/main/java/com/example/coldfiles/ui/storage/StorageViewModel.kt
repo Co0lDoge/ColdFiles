@@ -138,4 +138,16 @@ class StorageViewModel : ViewModel() {
     fun createSavedFiles() {
         savedFiles = storageUiState.files.slice(storageUiState.selectedIndexes).toList()
     }
+
+    /** Remove all items from savedFiles **/
+    fun resetSavedItems() {
+        savedFiles = listOf()
+    }
+
+    /** Copy saved files to current path **/
+    fun copySavedItems() {
+        savedFiles.forEach { file ->
+            file.copyTo(File(fullPath))
+        }
+    }
 }

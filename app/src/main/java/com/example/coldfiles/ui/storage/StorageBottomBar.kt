@@ -38,6 +38,7 @@ fun StorageBottomBar(
     onShareClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onMoreClick: () -> Unit,
+    onCancelClick: () -> Unit,
     selectedBottomBar: SelectedBottomBar,
     savedItems: List<File>,
     modifier: Modifier = Modifier
@@ -54,7 +55,10 @@ fun StorageBottomBar(
             }
 
             SelectedBottomBar.CopyBar -> {
-                StorageCopyBar(savedItems)
+                StorageCopyBar(
+                    savedItems = savedItems,
+                    onCancelClick = onCancelClick
+                )
             }
 
             SelectedBottomBar.MoveBar -> { /* TODO */
@@ -115,6 +119,7 @@ fun StorageBottomContextBar(
 @Composable
 fun StorageCopyBar(
     savedItems: List<File>,
+    onCancelClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -144,6 +149,7 @@ fun StorageCopyBar(
                 shape = RoundedCornerShape(32.dp),
                 color = MaterialTheme.colorScheme.surfaceContainerLow,
                 modifier = Modifier.clickable {
+                    onCancelClick()
                 }
             ) {
                 Text(
@@ -228,7 +234,10 @@ fun StorageCopyBarPreview() {
             color = MaterialTheme.colorScheme.surfaceContainerLow,
             shape = RoundedCornerShape(20.dp),
         ) {
-            StorageCopyBar(savedItems = listOf())
+            StorageCopyBar(
+                savedItems = listOf(),
+                onCancelClick = { }
+            )
         }
     }
 }
