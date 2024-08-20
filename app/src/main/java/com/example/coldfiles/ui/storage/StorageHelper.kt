@@ -29,6 +29,7 @@ fun openFile(file: File, context: Context) {
 
 // Function that shares list of files to other apps
 // TODO: set intent type based on file type
+// TODO: add support for sharing files by recursively adding it's content
 fun shareFiles(files: List<File>, context: Context) {
     val intent = Intent()
     intent.setAction(Intent.ACTION_SEND_MULTIPLE)
