@@ -120,7 +120,7 @@ fun StorageScreen(
                         viewModel.resetItemSelection()
                         selectedBottomBar = SelectedBottomBar.MoveBar
                     },
-                    onShareClick = { /* TODO */ },
+                    onShareClick = { shareFiles(viewModel.getSelectedItemsList(), context) },
                     onDeleteClick = {
                         selectedDialog = SelectedDialog.DeleteDialog
                     },

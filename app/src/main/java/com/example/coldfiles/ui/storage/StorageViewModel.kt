@@ -108,6 +108,11 @@ class StorageViewModel : ViewModel() {
         return storageUiState.files.slice(storageUiState.selectedIndexes).map { it.name }
     }
 
+    /** Returns list of all selected files **/
+    fun getSelectedItemsList(): List<File> {
+        return storageUiState.files.slice(storageUiState.selectedIndexes)
+    }
+
     /** Delete all selected items **/
     fun deleteSelectedItems() {
         val selectedItems = storageUiState.files.slice(storageUiState.selectedIndexes)
