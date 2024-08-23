@@ -67,9 +67,7 @@ class MainActivity : ComponentActivity() {
                     } else {
                         StorageAlertDialog(
                             onDismissRequest = { finish() },
-                            onConfirmation = {
-                                requestStoragePermission()
-                            },
+                            onConfirmation = { requestStoragePermission() },
                             dialogTitle = "Storage permission required",
                             dialogText = "This is a file manager that requires access to all files." +
                                     " Press Confirm to grant permission" +
