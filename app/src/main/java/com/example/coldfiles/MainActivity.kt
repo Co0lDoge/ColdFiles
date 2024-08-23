@@ -1,6 +1,7 @@
 package com.example.coldfiles
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -16,10 +17,13 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.coldfiles.ui.dialog.StorageAlertDialog
 import com.example.coldfiles.ui.storage.StorageScreen
 import com.example.coldfiles.ui.theme.ColdFilesTheme
+
+const val STORAGE_PERMISSION_CODE = 23
 
 class MainActivity : ComponentActivity() {
 
@@ -51,15 +55,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    if (Environment.isExternalStorageManager()) {
+                    if (checkStoragePermissions()) {
                         isActivityLaunched = true
                         StorageScreen()
                     } else {
                         StorageAlertDialog(
                             onDismissRequest = { finish() },
                             onConfirmation = {
-                                val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
-                                ContextCompat.startActivity(this, intent, null)
+                                requestStoragePermission()
                             },
                             dialogTitle = "Storage permission required",
                             dialogText = "This is a file manager that requires access to all files." +
@@ -71,6 +74,43 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
 
+    private fun checkStoragePermissions(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            //Android is 11 (R) or above
+            return Environment.isExternalStorageManager()
+        } else {
+            //Below android 11
+            val write =
+                ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            val read =
+                ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+
+            return read == PackageManager.PERMISSION_GRANTED && write == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun requestStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+            ContextCompat.startActivity(this, intent, null)
+        } else {
+            //Below android 11
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                ),
+                STORAGE_PERMISSION_CODE
+            )
+        }
     }
 }
