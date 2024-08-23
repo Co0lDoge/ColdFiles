@@ -44,6 +44,18 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @Deprecated("This method has been deprecated in favor of using the Activity Result API")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 23) {
+            launchStorageApp()
+        }
+    }
+
     /** Check storage permission,
      * if granted, launch the StorageScreen,
      * else show dialog asking for permission**/
