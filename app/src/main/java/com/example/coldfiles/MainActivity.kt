@@ -12,7 +12,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
@@ -23,8 +22,6 @@ import androidx.core.content.ContextCompat
 import com.example.coldfiles.ui.dialog.StorageAlertDialog
 import com.example.coldfiles.ui.storage.StorageScreen
 import com.example.coldfiles.ui.theme.ColdFilesTheme
-
-const val STORAGE_PERMISSION_CODE = 23
 
 class MainActivity : ComponentActivity() {
 
@@ -39,7 +36,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         launchStorageApp()
