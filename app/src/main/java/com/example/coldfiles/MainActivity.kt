@@ -7,9 +7,11 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -17,7 +19,6 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.coldfiles.ui.dialog.StorageAlertDialog
 import com.example.coldfiles.ui.storage.StorageScreen
@@ -28,6 +29,15 @@ const val STORAGE_PERMISSION_CODE = 23
 class MainActivity : ComponentActivity() {
 
     private var isActivityLaunched = false
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            launchStorageApp()
+        } else {
+            Toast.makeText(this, "This app requires storage permission", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,18 +50,6 @@ class MainActivity : ComponentActivity() {
         Log.v("StorageActivity", "Activity restarted")
         if (!isActivityLaunched) {
             Log.v("StorageActivity", "Activity relaunched")
-            launchStorageApp()
-        }
-    }
-
-    @Deprecated("This method has been deprecated in favor of using the Activity Result API")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 23) {
             launchStorageApp()
         }
     }
@@ -114,15 +112,8 @@ class MainActivity : ComponentActivity() {
             val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
             ContextCompat.startActivity(this, intent, null)
         } else {
-            //Below android 11
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE
-                ),
-                STORAGE_PERMISSION_CODE
-            )
+            requestPermissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
         }
     }
 }
