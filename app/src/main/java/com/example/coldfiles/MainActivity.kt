@@ -82,32 +82,33 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /** Check permission based on Android version **/
     private fun checkStoragePermissions(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            //Android is 11 (R) or above
+            // Permission for Android 11 (R) or above
             return Environment.isExternalStorageManager()
         } else {
-            //Below android 11
-            val write =
-                ContextCompat.checkSelfPermission(
-                    this,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-            val read =
-                ContextCompat.checkSelfPermission(
-                    this,
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-
+            // Permissions for Android 10 (Q) or below
+            val write = ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            val read = ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            )
             return read == PackageManager.PERMISSION_GRANTED && write == PackageManager.PERMISSION_GRANTED
         }
     }
 
+    /** Request permission based on Android version **/
     private fun requestStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Permission for Android 11 (R) or above
             val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
             ContextCompat.startActivity(this, intent, null)
         } else {
+            // Permissions for Android 10 (Q) or below
             requestPermissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
             requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
         }
