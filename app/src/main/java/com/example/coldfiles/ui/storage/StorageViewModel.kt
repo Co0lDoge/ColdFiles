@@ -164,4 +164,24 @@ class StorageViewModel : ViewModel() {
         }
         moveToDirectory()
     }
+
+    /** Creates file in current directory **/
+    // TODO: Add ability to select name
+    // TODO: Remove default value
+    fun createFile(fileName: String = "textfile.txt") {
+        val file = File(fullPath + "/" + fileName)
+        file.createNewFile()
+        moveToDirectory()
+    }
+
+    /** Creates folder in current directory **/
+    // TODO: Add ability to select name
+    // TODO: Remove default value
+    fun createFolder(folderName: String = "textfolder") {
+        val theDir = File(fullPath + "/" + folderName)
+        if (!theDir.exists()){
+            theDir.mkdirs();
+        }
+        moveToDirectory()
+    }
 }

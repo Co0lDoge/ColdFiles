@@ -100,6 +100,8 @@ fun StorageScreen(
             StorageTopBar(
                 isMenuExpanded = isTopMenuExpanded,
                 onSearchClick = { /* TODO */ },
+                onCreateFileClick = viewModel::createFile,
+                onCreateFolderClick = viewModel::createFolder,
                 onMoreClick = { isTopMenuExpanded = true },
                 onMenuDismissRequest = { isTopMenuExpanded = false }
             )
@@ -371,6 +373,8 @@ fun StorageTopBar(
     isMenuExpanded: Boolean,
     onSearchClick: () -> Unit,
     onMoreClick: () -> Unit,
+    onCreateFileClick: () -> Unit,
+    onCreateFolderClick: () -> Unit,
     onMenuDismissRequest: () -> Unit,
 ) {
     CenterAlignedTopAppBar(
@@ -388,11 +392,11 @@ fun StorageTopBar(
             ) {
                 DropdownMenuItem(
                     text = { Text(text = "Create File") },
-                    onClick = { /*TODO*/ }
+                    onClick = onCreateFileClick
                 )
                 DropdownMenuItem(
                     text = { Text(text = "Create Folder") },
-                    onClick = { /*TODO*/ }
+                    onClick = onCreateFolderClick
                 )
                 HorizontalDivider()
                 DropdownMenuItem(
