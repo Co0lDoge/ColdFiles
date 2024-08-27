@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -56,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coldfiles.R
 import com.example.coldfiles.ui.components.CircularCheckbox
+import com.example.coldfiles.ui.components.RoundedDropdownMenu
 import java.io.File
 import java.text.DateFormat
 
@@ -68,6 +70,7 @@ fun StorageScreen(
     val uiState = viewModel.storageUiState
     val context = LocalContext.current
 
+    var isTopMenuExpanded by remember { mutableStateOf(false) }
     var selectedDialog: SelectedDialog by remember { mutableStateOf(SelectedDialog.NoDialog) }
     var selectedBottomBar: SelectedBottomBar by remember { mutableStateOf(SelectedBottomBar.NoBar) }
 
@@ -93,7 +96,14 @@ fun StorageScreen(
     }
 
     Scaffold(
-        topBar = { StorageTopBar() },
+        topBar = {
+            StorageTopBar(
+                isMenuExpanded = isTopMenuExpanded,
+                onSearchClick = { /* TODO */ },
+                onMoreClick = { isTopMenuExpanded = true },
+                onMenuDismissRequest = { isTopMenuExpanded = false }
+            )
+        },
         bottomBar = {
             AnimatedVisibility(
                 visible = selectedBottomBar != SelectedBottomBar.NoBar,
@@ -136,7 +146,7 @@ fun StorageScreen(
                     savedItems = viewModel.savedFiles,
                     viewModel = viewModel
 
-                    )
+                )
             }
         }
     ) { innerPadding ->
@@ -357,15 +367,38 @@ fun StorageScrollableBar(
 /** Top bar with**/
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StorageTopBar() {
+fun StorageTopBar(
+    isMenuExpanded: Boolean,
+    onSearchClick: () -> Unit,
+    onMoreClick: () -> Unit,
+    onMenuDismissRequest: () -> Unit,
+) {
     CenterAlignedTopAppBar(
         title = { },
         actions = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = onSearchClick) {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = null)
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = onMoreClick) {
                 Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
+            }
+            RoundedDropdownMenu(
+                expanded = isMenuExpanded,
+                onDismissRequest = onMenuDismissRequest
+            ) {
+                DropdownMenuItem(
+                    text = { Text(text = "Create File") },
+                    onClick = { /*TODO*/ }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "Create Folder") },
+                    onClick = { /*TODO*/ }
+                )
+                HorizontalDivider()
+                DropdownMenuItem(
+                    text = { Text(text = "Settings") },
+                    onClick = { /*TODO*/ }
+                )
             }
         }
     )
