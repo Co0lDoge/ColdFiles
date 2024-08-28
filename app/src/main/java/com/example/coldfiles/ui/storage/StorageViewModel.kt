@@ -177,7 +177,7 @@ class StorageViewModel : ViewModel() {
     /** Creates folder in current directory **/
     // TODO: Add ability to select name
     // TODO: Remove default value
-    fun createFolder(folderName: String = "textfolder") {
+    fun createFolder(folderName: String) {
         val theDir = File(fullPath + "/" + folderName)
         if (!theDir.exists()){
             theDir.mkdirs();

@@ -10,6 +10,7 @@ sealed interface SelectedDialog {
     data object NoDialog : SelectedDialog
     data object DeleteDialog : SelectedDialog
     data object CreateFileDialog : SelectedDialog
+    data object CreateFolderDialog : SelectedDialog
 }
 
 @Composable
@@ -37,6 +38,11 @@ fun StorageDialogSelector(
         SelectedDialog.CreateFileDialog -> StorageTextInputDialog(
             dialogTitle = "Enter file name",
             onConfirmation = viewModel::createFile,
+            onDismiss = onDismissRequest
+        )
+        SelectedDialog.CreateFolderDialog -> StorageTextInputDialog(
+            dialogTitle = "Enter folder name",
+            onConfirmation = viewModel::createFolder,
             onDismiss = onDismissRequest
         )
     }

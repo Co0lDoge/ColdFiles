@@ -102,7 +102,7 @@ fun StorageScreen(
                 onSearchClick = { /* TODO */ },
                 onItemClick = { isTopMenuExpanded = false }, // Action when clicking on any item
                 onCreateFileClick = { selectedDialog = SelectedDialog.CreateFileDialog },
-                onCreateFolderClick = viewModel::createFolder,
+                onCreateFolderClick = { selectedDialog = SelectedDialog.CreateFolderDialog },
                 onMoreClick = { isTopMenuExpanded = true },
                 onMenuDismissRequest = { isTopMenuExpanded = false }
             )
