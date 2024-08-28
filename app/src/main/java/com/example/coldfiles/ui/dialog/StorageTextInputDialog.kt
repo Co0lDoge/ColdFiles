@@ -54,18 +54,18 @@ fun StorageTextInputDialog(
                 ) {
                     TextButton(
                         onClick = {
+                            onDismiss()
+                        }
+                    ) {
+                        Text("Dismiss")
+                    }
+                    TextButton(
+                        onClick = {
                             onConfirmation(text.value.text)
                             onDismiss()
                         }
                     ) {
                         Text("Confirm")
-                    }
-                    TextButton(
-                        onClick = {
-                            onDismiss()
-                        }
-                    ) {
-                        Text("Dismiss")
                     }
                 }
             }
