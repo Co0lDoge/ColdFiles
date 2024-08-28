@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -33,7 +33,9 @@ fun StorageTextInputDialog(
     val text = remember { mutableStateOf(TextFieldValue("")) }
     Dialog(onDismiss) {
         Surface(
-            shape = MaterialTheme.shapes.medium,
+            shape = AlertDialogDefaults.shape,
+            color = AlertDialogDefaults.containerColor,
+            contentColor = AlertDialogDefaults.textContentColor,
             modifier = modifier
         ) {
             Column {
@@ -64,6 +66,7 @@ fun StorageTextInputDialog(
                             onConfirmation(text.value.text)
                             onDismiss()
                         },
+                        // TODO: Add validation if file exists
                         enabled = text.value.text.isNotEmpty()
                     ) {
                         Text("Confirm")
