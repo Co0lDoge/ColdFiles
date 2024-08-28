@@ -13,8 +13,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -27,6 +30,7 @@ fun StorageTextInputDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val text = remember { mutableStateOf(TextFieldValue("")) }
     Dialog(onDismiss) {
         Surface(
             shape = MaterialTheme.shapes.medium,
@@ -37,8 +41,8 @@ fun StorageTextInputDialog(
                     Text(text = dialogTitle)
                     Spacer(Modifier.size(16.dp))
                     OutlinedTextField(
-                        value = "",
-                        onValueChange =  {   },
+                        value = text.value,
+                        onValueChange =  { text.value = it },
                     )
                 }
                 Spacer(Modifier.size(4.dp))
