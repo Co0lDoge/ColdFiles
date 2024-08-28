@@ -63,7 +63,8 @@ fun StorageTextInputDialog(
                         onClick = {
                             onConfirmation(text.value.text)
                             onDismiss()
-                        }
+                        },
+                        enabled = text.value.text.isNotEmpty()
                     ) {
                         Text("Confirm")
                     }
