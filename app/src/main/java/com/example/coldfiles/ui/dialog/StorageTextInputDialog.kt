@@ -26,7 +26,7 @@ import com.example.coldfiles.ui.theme.ColdFilesTheme
 @Composable
 fun StorageTextInputDialog(
     dialogTitle: String,
-    onConfirmation: () -> Unit,
+    onConfirmation: (String) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -54,7 +54,8 @@ fun StorageTextInputDialog(
                 ) {
                     TextButton(
                         onClick = {
-                            onConfirmation()
+                            onConfirmation(text.value.text)
+                            onDismiss()
                         }
                     ) {
                         Text("Confirm")
