@@ -168,7 +168,7 @@ class StorageViewModel : ViewModel() {
     /** Creates file in current directory **/
     // TODO: Add ability to select name
     // TODO: Remove default value
-    fun createFile(fileName: String = "textfile.txt") {
+    fun createFile(fileName: String) {
         val file = File(fullPath + "/" + fileName)
         file.createNewFile()
         moveToDirectory()
