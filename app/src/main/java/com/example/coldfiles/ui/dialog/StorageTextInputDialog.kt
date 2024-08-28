@@ -70,7 +70,7 @@ fun StorageTextInputDialog(
 
 @Composable
 @Preview(showBackground = true)
-fun StorageTextInputDialogPreview() {
+private fun StorageTextInputDialogPreview() {
     ColdFilesTheme {
         StorageTextInputDialog(
             dialogTitle = "Enter Name",
