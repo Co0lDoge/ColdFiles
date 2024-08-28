@@ -1,26 +1,19 @@
 package com.example.coldfiles.ui.dialog
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.example.coldfiles.ui.theme.ColdFilesTheme
 
 @Composable
@@ -31,50 +24,39 @@ fun StorageTextInputDialog(
     modifier: Modifier = Modifier
 ) {
     val text = remember { mutableStateOf(TextFieldValue("")) }
-    Dialog(onDismiss) {
-        Surface(
-            shape = AlertDialogDefaults.shape,
-            color = AlertDialogDefaults.containerColor,
-            contentColor = AlertDialogDefaults.textContentColor,
-            modifier = modifier
-        ) {
+    AlertDialog(
+        icon = {
+            Icon(Icons.Default.Create, contentDescription = dialogTitle)
+        },
+        text = {
             Column {
-                Column(Modifier.padding(24.dp)) {
-                    Text(text = dialogTitle)
-                    Spacer(Modifier.size(16.dp))
-                    OutlinedTextField(
-                        value = text.value,
-                        onValueChange =  { text.value = it },
-                    )
-                }
-                Spacer(Modifier.size(4.dp))
-                Row(
-                    Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    Arrangement.spacedBy(8.dp, Alignment.End),
-                ) {
-                    TextButton(
-                        onClick = {
-                            onDismiss()
-                        }
-                    ) {
-                        Text("Dismiss")
-                    }
-                    TextButton(
-                        onClick = {
-                            onConfirmation(text.value.text)
-                            onDismiss()
-                        },
-                        // TODO: Add validation if file exists
-                        enabled = text.value.text.isNotEmpty()
-                    ) {
-                        Text("Confirm")
-                    }
-                }
+                Text(text = dialogTitle)
+                OutlinedTextField(
+                    value = text.value,
+                    onValueChange =  { text.value = it },
+                )
             }
-        }
-    }
+        },
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation(text.value.text)
+                    onDismiss()
+                }
+            ) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss
+            ) {
+                Text("Dismiss")
+            }
+        },
+        modifier = modifier,
+    )
 }
 
 @Composable
