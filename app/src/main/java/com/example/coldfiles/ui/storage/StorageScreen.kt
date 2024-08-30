@@ -30,16 +30,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -57,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coldfiles.R
 import com.example.coldfiles.ui.components.CircularCheckbox
-import com.example.coldfiles.ui.components.RoundedDropdownMenu
 import java.io.File
 import java.text.DateFormat
 
@@ -365,56 +358,4 @@ fun StorageScrollableBar(
             )
         }
     }
-}
-
-/** Top bar with**/
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun StorageTopBar(
-    isMenuExpanded: Boolean,
-    onItemClick: () -> Unit, // Action when clicking on any item
-    onSearchClick: () -> Unit,
-    onMoreClick: () -> Unit,
-    onCreateFileClick: () -> Unit,
-    onCreateFolderClick: () -> Unit,
-    onMenuDismissRequest: () -> Unit,
-) {
-    CenterAlignedTopAppBar(
-        title = { },
-        actions = {
-            IconButton(onClick = onSearchClick) {
-                Icon(imageVector = Icons.Filled.Search, contentDescription = null)
-            }
-            IconButton(onClick = onMoreClick) {
-                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
-            }
-            RoundedDropdownMenu(
-                expanded = isMenuExpanded,
-                onDismissRequest = onMenuDismissRequest
-            ) {
-                DropdownMenuItem(
-                    text = { Text(text = "Create File") },
-                    onClick = {
-                        onCreateFileClick()
-                        onItemClick()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "Create Folder") },
-                    onClick = {
-                        onCreateFolderClick()
-                        onItemClick()
-                    }
-                )
-                HorizontalDivider()
-                DropdownMenuItem(
-                    text = { Text(text = "Settings") },
-                    onClick = {
-                        /*TODO set action*/
-                        onItemClick()
-                    }
-                )
-            }
-        }
-    )
 }
