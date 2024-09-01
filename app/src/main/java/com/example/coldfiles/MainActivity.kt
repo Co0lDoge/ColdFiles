@@ -20,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import com.example.coldfiles.ui.dialog.StorageAlertDialog
+import com.example.coldfiles.ui.navigation.AppNavGraph
 import com.example.coldfiles.ui.storage.StorageScreen
 import com.example.coldfiles.ui.theme.ColdFilesTheme
 
@@ -63,7 +64,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     if (checkStoragePermissions()) {
                         isActivityLaunched = true
-                        StorageScreen()
+                        AppNavGraph()
                     } else {
                         StorageAlertDialog(
                             onDismissRequest = { finish() },
