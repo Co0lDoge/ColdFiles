@@ -57,6 +57,8 @@ import java.text.DateFormat
 /** Top-level composable that holds reference to uiState **/
 @Composable
 fun StorageScreen(
+    onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: StorageViewModel = viewModel()
 ) {
@@ -92,11 +94,11 @@ fun StorageScreen(
         topBar = {
             StorageTopBar(
                 isMenuExpanded = isTopMenuExpanded,
-                onSearchClick = { /* TODO */ },
+                onSearchClick = onSearchClick,
                 onItemClick = { isTopMenuExpanded = false }, // Action when clicking on any item
                 onCreateFileClick = { selectedDialog = SelectedDialog.CreateFileDialog },
                 onCreateFolderClick = { selectedDialog = SelectedDialog.CreateFolderDialog },
-                onSettingsClick = { /* TODO */ },
+                onSettingsClick = onSettingsClick,
                 onMoreClick = { isTopMenuExpanded = true },
                 onMenuDismissRequest = { isTopMenuExpanded = false }
             )
