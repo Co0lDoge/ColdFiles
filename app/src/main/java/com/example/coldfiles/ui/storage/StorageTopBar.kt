@@ -23,6 +23,7 @@ fun StorageTopBar(
     onMoreClick: () -> Unit,
     onCreateFileClick: () -> Unit,
     onCreateFolderClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     onMenuDismissRequest: () -> Unit,
 ) {
     CenterAlignedTopAppBar(
@@ -56,7 +57,7 @@ fun StorageTopBar(
                 DropdownMenuItem(
                     text = { Text(text = "Settings") },
                     onClick = {
-                        /*TODO set action*/
+                        onSettingsClick()
                         onItemClick()
                     }
                 )

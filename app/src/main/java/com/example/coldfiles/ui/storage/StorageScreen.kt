@@ -96,6 +96,7 @@ fun StorageScreen(
                 onItemClick = { isTopMenuExpanded = false }, // Action when clicking on any item
                 onCreateFileClick = { selectedDialog = SelectedDialog.CreateFileDialog },
                 onCreateFolderClick = { selectedDialog = SelectedDialog.CreateFolderDialog },
+                onSettingsClick = { /* TODO */ },
                 onMoreClick = { isTopMenuExpanded = true },
                 onMenuDismissRequest = { isTopMenuExpanded = false }
             )
