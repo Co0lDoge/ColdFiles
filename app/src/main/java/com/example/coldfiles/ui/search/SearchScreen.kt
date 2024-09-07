@@ -35,6 +35,7 @@ fun SearchScreen(
     val text = remember { mutableStateOf(TextFieldValue("")) }
     Scaffold(
         topBar = { SearchTopBar(text) },
+        modifier = modifier
     ) { innerPadding ->
         StorageScreenCard(
             files = uiState.files,
