@@ -28,7 +28,9 @@ fun AppNavGraph(
             )
         }
         composable(route = SearchDestination.route) {
-            SearchScreen()
+            SearchScreen(
+                navigateAction = navController::navigateUp
+            )
         }
         composable(route = SettingsDestination.route) {
             SettingsScreen()

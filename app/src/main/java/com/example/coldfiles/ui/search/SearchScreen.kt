@@ -26,6 +26,7 @@ import com.example.coldfiles.ui.storage.openFile
 
 @Composable
 fun SearchScreen(
+    navigateAction: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = viewModel()
 ) {
@@ -34,7 +35,7 @@ fun SearchScreen(
 
     val text = remember { mutableStateOf(TextFieldValue("")) }
     Scaffold(
-        topBar = { SearchTopBar(text) },
+        topBar = { SearchTopBar(text, navigateAction) },
         modifier = modifier
     ) { innerPadding ->
         StorageScreenCard(
@@ -51,11 +52,12 @@ fun SearchScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchTopBar(
-    text: MutableState<TextFieldValue>
+    text: MutableState<TextFieldValue>,
+    navigateAction: () -> Unit,
 ) {
     TopAppBar(
         navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = navigateAction) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Back"
