@@ -1,6 +1,8 @@
 package com.example.coldfiles.ui.search
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +24,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coldfiles.ui.storage.StorageScreenCard
@@ -38,7 +42,7 @@ fun SearchScreen(
 
     val text = remember { mutableStateOf(TextFieldValue("")) }
     Scaffold(
-        topBar = { SearchTopBar(text, navigateAction) },
+        topBar = { SearchTopBar(text, navigateAction, viewModel::searchFiles) },
         modifier = modifier
     ) { innerPadding ->
         StorageScreenCard(
@@ -57,12 +61,16 @@ fun SearchScreen(
 fun SearchTopBar(
     text: MutableState<TextFieldValue>,
     navigateAction: () -> Unit,
+    searchAction: (String) -> Unit,
 ) {
     // Focus reference required to focus on search bar when search appears
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
+
+    // Controls whether the search bar is focused
+    val focusManager = LocalFocusManager.current
 
     TopAppBar(
         navigationIcon = {
@@ -76,7 +84,10 @@ fun SearchTopBar(
         title = {
             OutlinedTextField(
                 value = text.value,
-                onValueChange = { text.value = it },
+                onValueChange = {
+                    text.value = it
+                    searchAction(text.value.text)
+                },
                 placeholder = {
                     Text(
                         text = "Search",
@@ -89,7 +100,12 @@ fun SearchTopBar(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent
                 ),
-                //textStyle = MaterialTheme.typography.bodyLarge
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        focusManager.clearFocus()
+                    }
+                )
             )
         }
     )
