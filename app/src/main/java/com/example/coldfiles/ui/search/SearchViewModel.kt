@@ -1,0 +1,41 @@
+package com.example.coldfiles.ui.search
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import com.example.coldfiles.ui.storage.BASE_PATH
+import java.io.File
+
+data class SearchUiState(
+    val files: List<File> = listOf(),
+)
+
+class SearchViewModel: ViewModel() {
+    /** Variable that holds state visible in UI **/
+    var searchUiState by mutableStateOf(SearchUiState())
+        private set
+
+    /** Searches for specified files from root directory **/
+    fun searchFiles(name: String) {
+        val root = File(BASE_PATH)
+        searchUiState = searchUiState.copy(
+            files = searchFilesRecursively(root, name)
+        )
+    }
+
+    /** Searches for specified file from specified directory recursively**/
+    private fun searchFilesRecursively(dir: File, name: String): List<File> {
+        val result = mutableListOf<File>()
+        val files = dir.listFiles() ?: return result
+
+        for (file in files) {
+            if (file.isDirectory) {
+                result.addAll(searchFilesRecursively(file, name))
+            } else if (file.name.contains(name, ignoreCase = true)) {
+                result.add(file)
+            }
+        }
+        return result
+    }
+}
