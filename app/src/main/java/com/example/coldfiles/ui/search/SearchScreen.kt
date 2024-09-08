@@ -16,7 +16,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -40,15 +39,14 @@ fun SearchScreen(
     val uiState = viewModel.searchUiState
     val context = LocalContext.current
 
-    val text = remember { mutableStateOf(TextFieldValue("")) }
     Scaffold(
-        topBar = { SearchTopBar(text, navigateAction, viewModel::searchFiles) },
+        topBar = { SearchTopBar(navigateAction, viewModel::searchFiles) },
         modifier = modifier
     ) { innerPadding ->
         StorageScreenCard(
             files = uiState.files,
             onItemClick = { openFile(it, context) },
-            onLongItemClick = { },
+            onLongItemClick = {  },
             showCheckBoxes = false,
             checkSelection = { false },
             modifier = Modifier.padding(innerPadding)
@@ -59,10 +57,12 @@ fun SearchScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchTopBar(
-    text: MutableState<TextFieldValue>,
     navigateAction: () -> Unit,
     searchAction: (String) -> Unit,
 ) {
+    // Text value for TextField
+    val text = remember { mutableStateOf(TextFieldValue("")) }
+
     // Focus reference required to focus on search bar when search appears
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
