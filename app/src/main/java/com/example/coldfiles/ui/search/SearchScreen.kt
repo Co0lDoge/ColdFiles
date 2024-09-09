@@ -1,16 +1,27 @@
 package com.example.coldfiles.ui.search
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -26,9 +37,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.coldfiles.ui.storage.StorageScreenCard
+import com.example.coldfiles.ui.storage.StorageItemGrid
 import com.example.coldfiles.ui.storage.openFile
+import java.io.File
 
 @Composable
 fun SearchScreen(
@@ -43,7 +56,7 @@ fun SearchScreen(
         topBar = { SearchTopBar(navigateAction, viewModel::searchFiles) },
         modifier = modifier
     ) { innerPadding ->
-        StorageScreenCard(
+        SearchScreenCard(
             files = uiState.files,
             onItemClick = { openFile(it, context) },
             onLongItemClick = {  },
@@ -54,6 +67,81 @@ fun SearchScreen(
     }
 }
 
+/** Card containing grid of StorageItems **/
+@Composable
+fun SearchScreenCard(
+    files: List<File>,
+    onItemClick: (File) -> Unit,
+    onLongItemClick: (File) -> Unit,
+    showCheckBoxes: Boolean,
+    checkSelection: (File) -> Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp
+        ),
+        modifier = modifier
+            .padding(bottom = 8.dp)
+    ) {
+        Surface(
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Column {
+                SearchFilterBar(Modifier.padding(16.dp))
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                )
+                if (files.isNotEmpty()) {
+                    StorageItemGrid(
+                        files = files,
+                        onItemClick = onItemClick,
+                        onLongItemClick = onLongItemClick,
+                        showCheckBoxes = showCheckBoxes,
+                        checkSelection = checkSelection
+                    )
+                } else {
+                    Text(
+                        text = "No matches",
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SearchFilterBar(modifier: Modifier = Modifier) {
+    Column(modifier) {
+        Text(
+            text = "Filters",
+            style = MaterialTheme.typography.titleMedium
+        )
+        Spacer(modifier = Modifier.padding(top = 16.dp))
+        Text(
+            text = "Type",
+            style = MaterialTheme.typography.titleSmall
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            // TODO: Replace with grid of filter buttons
+            OutlinedButton(onClick = { /*TODO*/ }) {
+                Text(text = "Image")
+            }
+            OutlinedButton(onClick = { /*TODO*/ }) {
+                Text(text = "Audio")
+            }
+            OutlinedButton(onClick = { /*TODO*/ }) {
+                Text(text = "Document")
+            }
+        }
+    }
+}
+
+/** Search bar for text entry **/
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchTopBar(
