@@ -30,7 +30,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -39,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coldfiles.ui.storage.StorageItemGrid
@@ -56,7 +54,11 @@ fun SearchScreen(
     val context = LocalContext.current
 
     Scaffold(
-        topBar = { SearchTopBar(navigateAction, viewModel::searchFiles) },
+        topBar = { SearchTopBar(
+            text = uiState.text,
+            onTextChange = viewModel::processTextChange,
+            navigateAction = navigateAction,
+        ) },
         modifier = modifier
     ) { innerPadding ->
         SearchScreenCard(
@@ -148,12 +150,10 @@ fun SearchFilterBar(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchTopBar(
+    text: String,
+    onTextChange: (String) -> Unit,
     navigateAction: () -> Unit,
-    searchAction: (String) -> Unit,
 ) {
-    // Text value for TextField
-    val text = remember { mutableStateOf(TextFieldValue("")) }
-
     // Focus reference required to focus on search bar when search appears
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -174,11 +174,8 @@ fun SearchTopBar(
         },
         title = {
             OutlinedTextField(
-                value = text.value,
-                onValueChange = {
-                    text.value = it
-                    searchAction(text.value.text)
-                },
+                value = text,
+                onValueChange = onTextChange,
                 placeholder = {
                     Text(
                         text = "Search",

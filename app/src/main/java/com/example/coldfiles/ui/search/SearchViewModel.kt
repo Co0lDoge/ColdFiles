@@ -8,6 +8,7 @@ import com.example.coldfiles.ui.storage.BASE_PATH
 import java.io.File
 
 data class SearchUiState(
+    val text: String = "",
     val files: List<File> = listOf(),
 )
 
@@ -16,8 +17,19 @@ class SearchViewModel: ViewModel() {
     var searchUiState by mutableStateOf(SearchUiState())
         private set
 
+    /** Changes text in uiState and searches for files **/
+    fun processTextChange(text: String) {
+        /* Could possibly be overwritten by value in searchFiles function
+        * If so, possible workaround is to abort coroutine when text is changed
+        * or separate text from the rest of uiState*/
+        searchUiState = searchUiState.copy(
+            text = text
+        )
+        searchFiles(text)
+    }
+
     /** Searches for specified files from root directory **/
-    fun searchFiles(name: String) {
+    private fun searchFiles(name: String) {
         val root = File(BASE_PATH)
         searchUiState = searchUiState.copy(
             files = searchFilesRecursively(root, name)
