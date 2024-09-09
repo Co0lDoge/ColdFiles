@@ -1,6 +1,7 @@
 package com.example.coldfiles.ui.search
 
-enum class SearchFilter(name: String) {
+/** Filters used for searching **/
+enum class SearchFilter(val displayName: String) {
     Image("Image"),
     Audio("Audio"),
     Document("Document"),

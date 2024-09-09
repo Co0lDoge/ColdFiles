@@ -137,7 +137,7 @@ fun SearchFilterBar(modifier: Modifier = Modifier) {
         ) {
             items(SearchFilter.entries.toList()) { filter ->
                 OutlinedButton(onClick = { /*TODO*/ }) {
-                    Text(text = filter.name)
+                    Text(text = filter.displayName)
                 }
             }
         }
