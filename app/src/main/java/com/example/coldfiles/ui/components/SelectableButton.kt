@@ -33,7 +33,7 @@ fun SelectableButton(
 ) {
     val border = if (!selected) ButtonDefaults.outlinedButtonBorder
                  else BorderStroke(
-                     width = 1.dp,
+                     width = 2.dp,
                      color = ButtonDefaults.outlinedButtonColors().contentColor
                  )
 
