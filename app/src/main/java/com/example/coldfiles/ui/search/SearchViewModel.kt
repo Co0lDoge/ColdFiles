@@ -54,14 +54,19 @@ class SearchViewModel: ViewModel() {
 
     /** Selects the filter if it is not selected and deselects the filter if it is selected **/
     fun processFilterClick(filter: SearchFilter) {
-        searchUiState = when(searchUiState.selectedFilters.contains(filter)) {
-            true -> searchUiState.copy(
-                selectedFilters = searchUiState.selectedFilters - filter
-            )
-            false ->  searchUiState.copy(
-                selectedFilters = searchUiState.selectedFilters + filter
-            )
+        // Create updated list of filters
+        val filterList = when(checkIfFilterSelected(filter)) {
+            true -> searchUiState.selectedFilters - filter
+            false -> searchUiState.selectedFilters + filter
         }
+
+        // Update uiState
+        searchUiState = searchUiState.copy(
+            selectedFilters = filterList,
+        )
+
+        // Search files with new filtering
+        searchFiles(searchUiState.text)
     }
 
     /** Checks if filter is in selectedFilters list**/
@@ -70,12 +75,15 @@ class SearchViewModel: ViewModel() {
     }
 
     /** Returns full list if there's no filters, else uses filters from list **/
-    private fun filterResults(files: List<File>): List<File> {
+    private fun filterResults(
+        files: List<File>,
+        filterList: List<SearchFilter> = searchUiState.selectedFilters
+    ): List<File> {
         if (searchUiState.selectedFilters.isEmpty()) return files
 
         val filteredFiles = mutableListOf<File>()
         for (file in files) {
-            for (filter in searchUiState.selectedFilters) {
+            for (filter in filterList) {
                 if (filter.extensions.contains(file.extension)) {
                     filteredFiles.add(file)
                     break
