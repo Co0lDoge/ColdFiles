@@ -10,6 +10,7 @@ import java.io.File
 data class SearchUiState(
     val text: String = "",
     val files: List<File> = listOf(),
+    val selectedFilters: List<SearchFilter> = listOf()
 )
 
 class SearchViewModel: ViewModel() {
@@ -26,6 +27,22 @@ class SearchViewModel: ViewModel() {
             text = text
         )
         searchFiles(text)
+    }
+
+    /** Selects the filter if it is not selected and deselects the filter if it is selected **/
+    fun processFilterClick(filter: SearchFilter) {
+        if (searchUiState.selectedFilters.contains(filter))
+            searchUiState = searchUiState.copy(
+                selectedFilters = searchUiState.selectedFilters - filter
+            )
+        else searchUiState = searchUiState.copy(
+            selectedFilters = searchUiState.selectedFilters + filter
+        )
+    }
+
+    /** Checks if filter is in selectedFilters list**/
+    fun checkIfFilterSelected(filter: SearchFilter): Boolean {
+        return searchUiState.selectedFilters.contains(filter)
     }
 
     /** Searches for specified files from root directory **/

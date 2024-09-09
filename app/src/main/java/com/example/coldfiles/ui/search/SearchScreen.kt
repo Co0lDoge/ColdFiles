@@ -21,7 +21,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -40,6 +39,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coldfiles.ui.components.SelectableButton
 import com.example.coldfiles.ui.storage.StorageItemGrid
 import com.example.coldfiles.ui.storage.openFile
 import java.io.File
@@ -54,19 +54,23 @@ fun SearchScreen(
     val context = LocalContext.current
 
     Scaffold(
-        topBar = { SearchTopBar(
-            text = uiState.text,
-            onTextChange = viewModel::processTextChange,
-            navigateAction = navigateAction,
-        ) },
+        topBar = {
+            SearchTopBar(
+                text = uiState.text,
+                onTextChange = viewModel::processTextChange,
+                navigateAction = navigateAction,
+            )
+        },
         modifier = modifier
     ) { innerPadding ->
         SearchScreenCard(
             files = uiState.files,
             onItemClick = { openFile(it, context) },
             onLongItemClick = { },
+            onFilterClick = viewModel::processFilterClick,
+            checkFilterSelection = viewModel::checkIfFilterSelected ,
             showCheckBoxes = false,
-            checkSelection = { false },
+            checkBoxesSelection = { false },
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -78,8 +82,10 @@ fun SearchScreenCard(
     files: List<File>,
     onItemClick: (File) -> Unit,
     onLongItemClick: (File) -> Unit,
+    onFilterClick: (SearchFilter) -> Unit,
+    checkFilterSelection: (SearchFilter) -> Boolean,
     showCheckBoxes: Boolean,
-    checkSelection: (File) -> Boolean,
+    checkBoxesSelection: (File) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -95,7 +101,11 @@ fun SearchScreenCard(
             modifier = Modifier.fillMaxSize()
         ) {
             Column {
-                SearchFilterBar(Modifier.padding(16.dp))
+                SearchFilterBar(
+                    onFilterClick = onFilterClick,
+                    checkFilterSelection = checkFilterSelection,
+                    modifier = Modifier.padding(16.dp)
+                )
                 HorizontalDivider(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
@@ -106,7 +116,7 @@ fun SearchScreenCard(
                         onItemClick = onItemClick,
                         onLongItemClick = onLongItemClick,
                         showCheckBoxes = showCheckBoxes,
-                        checkSelection = checkSelection
+                        checkSelection = checkBoxesSelection
                     )
                 } else {
                     Text(
@@ -120,7 +130,11 @@ fun SearchScreenCard(
 }
 
 @Composable
-fun SearchFilterBar(modifier: Modifier = Modifier) {
+fun SearchFilterBar(
+    checkFilterSelection: (SearchFilter) -> Boolean,
+    onFilterClick: (SearchFilter) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(modifier) {
         Text(
             text = "Filters",
@@ -138,7 +152,10 @@ fun SearchFilterBar(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth()
         ) {
             items(SearchFilter.entries.toList()) { filter ->
-                OutlinedButton(onClick = { /*TODO*/ }) {
+                SelectableButton(
+                    onClick = { onFilterClick(filter) },
+                    selected = checkFilterSelection(filter)
+                ) {
                     Text(text = filter.displayName)
                 }
             }
