@@ -29,23 +29,6 @@ class SearchViewModel: ViewModel() {
         searchFiles(text)
     }
 
-    /** Selects the filter if it is not selected and deselects the filter if it is selected **/
-    fun processFilterClick(filter: SearchFilter) {
-        searchUiState = when(searchUiState.selectedFilters.contains(filter)) {
-            true -> searchUiState.copy(
-                selectedFilters = searchUiState.selectedFilters - filter
-            )
-            false ->  searchUiState.copy(
-                selectedFilters = searchUiState.selectedFilters + filter
-            )
-        }
-    }
-
-    /** Checks if filter is in selectedFilters list**/
-    fun checkIfFilterSelected(filter: SearchFilter): Boolean {
-        return searchUiState.selectedFilters.contains(filter)
-    }
-
     /** Searches for specified files from root directory **/
     private fun searchFiles(name: String) {
         val root = File(BASE_PATH)
@@ -66,6 +49,40 @@ class SearchViewModel: ViewModel() {
                 result.add(file)
             }
         }
-        return result
+        return filterResults(result)
+    }
+
+    /** Selects the filter if it is not selected and deselects the filter if it is selected **/
+    fun processFilterClick(filter: SearchFilter) {
+        searchUiState = when(searchUiState.selectedFilters.contains(filter)) {
+            true -> searchUiState.copy(
+                selectedFilters = searchUiState.selectedFilters - filter
+            )
+            false ->  searchUiState.copy(
+                selectedFilters = searchUiState.selectedFilters + filter
+            )
+        }
+    }
+
+    /** Checks if filter is in selectedFilters list**/
+    fun checkIfFilterSelected(filter: SearchFilter): Boolean {
+        return searchUiState.selectedFilters.contains(filter)
+    }
+
+    /** Returns full list if there's no filters, else uses filters from list **/
+    private fun filterResults(files: List<File>): List<File> {
+        if (searchUiState.selectedFilters.isEmpty()) return files
+
+        val filteredFiles = mutableListOf<File>()
+        for (file in files) {
+            for (filter in searchUiState.selectedFilters) {
+                if (filter.extensions.contains(file.extension)) {
+                    filteredFiles.add(file)
+                    break
+                }
+            }
+        }
+
+        return filteredFiles
     }
 }
