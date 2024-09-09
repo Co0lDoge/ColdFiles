@@ -2,10 +2,13 @@ package com.example.coldfiles.ui.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -59,7 +62,7 @@ fun SearchScreen(
         SearchScreenCard(
             files = uiState.files,
             onItemClick = { openFile(it, context) },
-            onLongItemClick = {  },
+            onLongItemClick = { },
             showCheckBoxes = false,
             checkSelection = { false },
             modifier = Modifier.padding(innerPadding)
@@ -126,16 +129,16 @@ fun SearchFilterBar(modifier: Modifier = Modifier) {
             text = "Type",
             style = MaterialTheme.typography.titleSmall
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            // TODO: Replace with grid of filter buttons
-            OutlinedButton(onClick = { /*TODO*/ }) {
-                Text(text = "Image")
-            }
-            OutlinedButton(onClick = { /*TODO*/ }) {
-                Text(text = "Audio")
-            }
-            OutlinedButton(onClick = { /*TODO*/ }) {
-                Text(text = "Document")
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            items(SearchFilter.entries.toList()) { filter ->
+                OutlinedButton(onClick = { /*TODO*/ }) {
+                    Text(text = filter.name)
+                }
             }
         }
     }
