@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.coldfiles.ui.theme.ColdFilesTheme
 
 @Composable
 fun CircularCheckbox(
@@ -23,7 +25,11 @@ fun CircularCheckbox(
     Box(
         modifier = modifier
             .size(24.dp)
-            .border(width = 2.dp, color = MaterialTheme.colorScheme.onBackground, shape = CircleShape)
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.onBackground,
+                shape = CircleShape
+            )
             .background(
                 color = if (checked)
                     MaterialTheme.colorScheme.onSecondary
@@ -42,5 +48,13 @@ fun CircularCheckbox(
                 modifier = Modifier.size(16.dp)
             )
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun CircularCheckboxPreview() {
+    ColdFilesTheme {
+        CircularCheckbox(checked = true)
     }
 }
