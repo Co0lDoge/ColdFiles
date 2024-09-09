@@ -13,7 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.coldfiles.ui.components.RoundedDropdownMenu
 
-/** Top bar with**/
+/** Top bar for SearchScreen **/
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StorageTopBar(
@@ -27,7 +27,7 @@ fun StorageTopBar(
     onMenuDismissRequest: () -> Unit,
 ) {
     CenterAlignedTopAppBar(
-        title = { },
+        title = { /* Should be empty */ },
         actions = {
             IconButton(onClick = onSearchClick) {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = null)
