@@ -31,13 +31,14 @@ class SearchViewModel: ViewModel() {
 
     /** Selects the filter if it is not selected and deselects the filter if it is selected **/
     fun processFilterClick(filter: SearchFilter) {
-        if (searchUiState.selectedFilters.contains(filter))
-            searchUiState = searchUiState.copy(
+        searchUiState = when(searchUiState.selectedFilters.contains(filter)) {
+            true -> searchUiState.copy(
                 selectedFilters = searchUiState.selectedFilters - filter
             )
-        else searchUiState = searchUiState.copy(
-            selectedFilters = searchUiState.selectedFilters + filter
-        )
+            false ->  searchUiState.copy(
+                selectedFilters = searchUiState.selectedFilters + filter
+            )
+        }
     }
 
     /** Checks if filter is in selectedFilters list**/
