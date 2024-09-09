@@ -154,7 +154,11 @@ fun StorageScreen(
         ) {
             StorageScrollableBar(
                 directoriesNames = viewModel.storageUiState.pathDeque,
-                onBarItemClick = viewModel::moveToPreviousSpecifiedDirectory,
+                onBarItemClick = {
+                    viewModel.moveToPreviousSpecifiedDirectory(it)
+                    viewModel.resetItemSelection()
+                    selectedBottomBar = SelectedBottomBar.NoBar
+                },
                 modifier = Modifier.padding(16.dp)
             )
             StorageScreenCard(
