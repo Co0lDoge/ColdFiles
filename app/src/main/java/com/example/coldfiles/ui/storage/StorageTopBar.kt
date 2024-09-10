@@ -55,6 +55,7 @@ fun StorageTopBar(
                 )
                 HorizontalDivider()
                 DropdownMenuItem(
+                    enabled = false, // TODO: enable when working on settings screen
                     text = { Text(text = "Settings") },
                     onClick = {
                         onSettingsClick()

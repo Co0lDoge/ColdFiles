@@ -127,6 +127,7 @@ fun StorageBottomContextBar(
             iconRes = R.drawable.delete
         )
         StorageBottomBarItem(
+            enabled = false, // TODO: enable when working on more content for bottom bar
             text = "More",
             action = { onMoreClick() },
             iconRes = R.drawable.more_vertical
